@@ -94,3 +94,150 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Ошибка при инициализации:', error);
     }
 });
+// обработка кнопки "Завершить лекцию"
+document.addEventListener('DOMContentLoaded', () => {
+    // Находим все кнопки "Завершить лекцию"
+    const completeLectureButtons = document.querySelectorAll('.course__complete-lecture');
+
+    completeLectureButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            if (!isUserAuthorized) {
+                alert('Пожалуйста, авторизуйтесь, чтобы завершить лекцию.');
+                return;
+            }
+
+            // Получаем ID текущей лекции
+            const lectureId = this.dataset.lectureId;
+
+            // Находим кнопку "Пройти тест" для этой лекции
+            const takeTestButton = document.querySelector(`.course__take-test[data-lecture-id="${lectureId}"]`);
+            if (takeTestButton) {
+                takeTestButton.style.display = 'inline-block';
+            }
+        });
+    });
+
+    // Находим все кнопки "Пройти тест"
+    const takeTestButtons = document.querySelectorAll('.course__take-test');
+
+    takeTestButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            // Получаем ID текущей лекции
+            const lectureId = this.dataset.lectureId;
+
+            // Находим блок с тестом для этой лекции
+            const testBlock = document.querySelector(`.test-block[data-lecture-id="${lectureId}"]`);
+            if (testBlock) {
+                testBlock.style.display = 'block';
+            }
+        });
+    });
+
+    // Обработка отправки теста
+    const testForms = document.querySelectorAll('.test-form');
+    testForms.forEach(form => {
+        form.addEventListener('submit', function (event) {
+            event.preventDefault(); // Предотвращаем отправку формы
+
+            // Получаем ответы пользователя
+            const question1 = form.querySelector('[name="question1"]').value;
+            const question2 = form.querySelector('[name="question2"]').value;
+
+            // Пример обработки ответов
+            console.log('Ответ на вопрос 1:', question1);
+            console.log('Ответ на вопрос 2:', question2);
+
+            alert('Тест успешно отправлен!');
+        });
+    });
+});
+// обработка кнопок пройти тест
+document.addEventListener('DOMContentLoaded', () => {
+    // Находим все кнопки "Пройти тест"
+    const takeTestButtons = document.querySelectorAll('.course__take-test');
+
+    takeTestButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            // Получаем ID текущей лекции
+            const lectureId = this.dataset.lectureId;
+
+            // Находим блок с тестом для этой лекции
+            const testBlock = document.querySelector(`.test-block[data-lecture-id="${lectureId}"]`);
+            if (testBlock) {
+                testBlock.style.display = 'block';
+            }
+        });
+    });
+
+    // Обработка отправки теста
+    const testForms = document.querySelectorAll('.test-form');
+    testForms.forEach(form => {
+        form.addEventListener('submit', function (event) {
+            event.preventDefault(); // Предотвращаем отправку формы
+
+            // Получаем ответы пользователя
+            const question1 = form.querySelector('[name="question1"]').value;
+            const question2 = form.querySelector('[name="question2"]').value;
+
+            // Пример обработки ответов
+            console.log('Ответ на вопрос 1:', question1);
+            console.log('Ответ на вопрос 2:', question2);
+
+            alert('Тест успешно отправлен!');
+        });
+    });
+});
+// обработка кнопки следующая лекция
+document.addEventListener('DOMContentLoaded', () => {
+    // Находим все кнопки "Следующая лекция"
+    const nextLectureButtons = document.querySelectorAll('.course__next-lecture');
+
+    nextLectureButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            // Получаем родительскую секцию (текущую лекцию)
+            const currentLecture = this.closest('.cours__lecture');
+            const nextLectureId = currentLecture.dataset.nextLectureId;
+
+            if (nextLectureId) {
+                // Скрываем текущую лекцию
+                currentLecture.style.display = 'none';
+
+                // Показываем следующую лекцию
+                const nextLecture = document.getElementById(`lecture-${nextLectureId}`);
+                if (nextLecture) {
+                    nextLecture.style.display = 'block';
+
+                    // Загружаем текст следующей лекции
+                    loadLectureText(nextLectureId);
+                }
+            } else {
+                alert('Это последняя лекция.');
+            }
+        });
+    });
+});
+// обработчик событий для кнопок аккордеона
+document.addEventListener('DOMContentLoaded', () => {
+    // Находим все кнопки аккордеона
+    const accordionButtons = document.querySelectorAll('.course__accordion-section');
+
+    accordionButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            // Находим следующий элемент <ul> с лекциями
+            const lectureList = this.nextElementSibling;
+
+            // Проверяем текущее состояние
+            const isCollapsed = this.getAttribute('data-state') === 'collapsed';
+
+            if (isCollapsed) {
+                // Разворачиваем список
+                lectureList.style.display = 'block';
+                this.setAttribute('data-state', 'expanded');
+            } else {
+                // Сворачиваем список
+                lectureList.style.display = 'none';
+                this.setAttribute('data-state', 'collapsed');
+            }
+        });
+    });
+});
