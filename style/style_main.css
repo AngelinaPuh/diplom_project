@@ -1,0 +1,96 @@
+/* Обнуление стандартных отступов */
+* {
+  margin: 0; /* Убираем внешние отступы */
+  padding: 0; /* Убираем внутренние отступы */
+  font-family: "Roboto", Arial, sans-serif; /* Используем красивый шрифт Roboto */
+}
+/* Базовые стили для body */
+.wrapper {
+  font-size: 16px; /* Размер шрифта по умолчанию */
+  line-height: 1.6; /* Межстрочный интервал */
+  color: #000000; /* Цвет текста */
+  background-color: #f2f2f2; /*Цвет фона страницы */
+  text-align: justify;
+  min-width: 1240px;
+
+  display: grid;
+  grid-template-rows: auto 1fr auto; /* Шапка → Контент → Подвал */
+  /* min-height: 98vh; */
+}
+.wrapper a {
+  color: #ffffff; /* Белый цвет для всех ссылок */
+  text-decoration: none; /* Убираем подчеркивание */
+}
+/* ---------------------------------------------------------------------------------------ШАПКА */
+header {
+  background-color: #333; /* Темный фон */
+  color: #fff; /* Белый текст */
+  padding: 10px 20px; /* Добавляем внутренние отступы */
+}
+
+.header__container {
+  display: flex;
+  justify-content: space-between; /* Распределяем блоки по краям и центру */
+  align-items: center; /* Выравниваем элементы по центру по вертикали */
+}
+
+.header__container-logo,
+.header__container-course,
+.header__container-profile {
+  display: flex;
+  align-items: center; /* Выравниваем элементы внутри контейнеров по центру */
+}
+
+.header__title a {
+  color: #fff; /* Белый цвет для всех ссылок */
+}
+.header__title a:hover {
+  color: #CEFDCA; /* Белый цвет для всех ссылок */
+}
+
+.header__title {
+  font-size: 1.5em; /* Размер текста для заголовка */
+  margin: 0; /* Убираем отступы у заголовка */
+}
+
+.header__logo img,
+.header__icon img {
+  vertical-align: middle; /* Выравниваем изображения по центру */
+}
+/* ---------------------------------------------------------------------------------------ПОДВАЛ */
+footer {
+  background-color: #333; /* Темный фон */
+  color: #fff; /* Белый текст */
+  text-align: justify;
+  display: flex;
+  justify-content: center;
+  bottom: 0;
+}
+
+.footer__container {
+  display: flex;
+  justify-content: space-between; /* Распределяем блоки по краям и центру */
+  align-items: flex-start; /* Выравниваем по верхнему краю */
+  padding: 10px;
+  width: 1200px;
+}
+
+.footer__left,
+.footer__center,
+.footer__right {
+  width: calc(33% - 50px);
+  text-align: center;
+}
+.footer__center ul {
+  list-style: none; /* Убираем маркеры списка */
+  padding: 0; /* Убираем отступы */
+  margin: 0; /* Убираем внешние отступы */
+}
+
+.footer__center li {
+  margin-bottom: 5px; /* Отступ между элементами списка */
+}
+
+.footer__center i {
+  margin-right: 5px; /* Отступ между иконкой и текстом */
+}

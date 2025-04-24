@@ -1,0 +1,128 @@
+.course__container {
+    display: flex;
+    width: 100%;
+    height: calc(100vh - 157px); /* Вычитаем высоту шапки и подвала */
+    overflow: hidden; /* Предотвращает переполнение */
+}
+
+/* Сайдбар */
+.course__sidebar {
+    width: 250px;
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    overflow-y: auto;
+    height: 100%;
+    min-width: min-content;
+    max-width: 20%;
+}
+
+.course__sidebar h3 {
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.course__accordion {
+    list-style: none;
+    padding: 0;
+    padding-bottom: 30px;
+}
+
+.course__accordion-section {
+    background-color: #444;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    outline: none;
+}
+
+.course__accordion-lecture {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.course__accordion-lecture li {
+    padding: 5px 10px;
+}
+
+.course__accordion-lecture a {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    padding: 5px 10px;
+}
+
+.course__accordion-lecture a:hover {
+    background-color: #555;
+}
+
+/* Основной контент */
+.course__content {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    height: 100%;
+    border-radius: 8px;
+    margin: 10px;
+}
+.cours__lecture {
+    display: none; 
+    background-color: #fff;
+    margin-bottom: 70px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative; /* Для позиционирования кнопки "Следующая лекция" */
+}
+
+.cours__lecture-header {
+    margin-bottom: 20px;
+}
+
+.cours__lecture article {
+    margin-bottom: 20px;
+}
+
+.cours__lecture img {
+    max-width: 100%;
+    height: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.course__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.course__footer button {
+    padding: 10px 20px;
+    background-color: #28A745;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.course__footer button:hover {
+    background-color: #218838;
+}
+
+/* Кнопка "Следующая лекция" */
+#course__next-lecture {
+    position: absolute;
+    right: 20px;
+}
+/* Подсветка активной ссылки в сайдбаре */
+.course__accordion-lecture a.active {
+    background-color: #fff; /* Белый фон */
+    color: #333; /* Темный текст */
+    font-weight: bold; /* Жирный шрифт */
+    border-radius: 4px; /* Закругленные углы */
+}

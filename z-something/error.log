@@ -1,0 +1,5 @@
+[16-Apr-2025 14:35:17 Europe/Moscow] PHP Notice:  Undefined variable: mysqli in B:\angelina\OSPanel\domains\localhost\diplom_project\database\dbconnect.php on line 3
+[16-Apr-2025 14:35:17 Europe/Moscow] PHP Notice:  Trying to get property 'connect_errno' of non-object in B:\angelina\OSPanel\domains\localhost\diplom_project\database\dbconnect.php on line 3
+[16-Apr-2025 14:42:23 Europe/Moscow] PHP Warning:  mysqli::__construct(): (HY000/1049): Unknown database 'dim' in B:\angelina\OSPanel\domains\localhost\diplom_project\database\dbconnect.php on line 2
+[16-Apr-2025 14:42:23 Europe/Moscow] PHP Notice:  Undefined variable: mysqli in B:\angelina\OSPanel\domains\localhost\diplom_project\database\dbconnect.php on line 3
+[16-Apr-2025 14:42:23 Europe/Moscow] PHP Notice:  Trying to get property 'connect_errno' of non-object in B:\angelina\OSPanel\domains\localhost\diplom_project\database\dbconnect.php on line 3
