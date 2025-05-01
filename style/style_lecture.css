@@ -1,0 +1,81 @@
+/* Заголовки */
+.lectures__items-h1,
+.lectures__items-h2 {
+    font-size: 2em;
+    font-weight: bold;
+    color: rgb(0, 0, 0);
+    text-align: center;
+    /* Центрирование заголовков */
+    margin-bottom: 20px;
+    /* Отступ снизу */
+}
+
+.lectures__items-h2 {
+    font-size: 1.5em;
+}
+
+.lectures__items-h3 {
+    font-size: 1em;
+    text-align: left;
+    margin-bottom: 10px;
+}
+/* Абзацы */
+.lectures__items-p {
+    font-size: 1em;
+    line-height: 1.6;
+    color: rgb(0, 0, 0);
+    margin-bottom: 15px;
+}
+
+
+/* Списки */
+.lectures__items-ul,
+.lectures__items-ol {
+    list-style-type: disc;
+    /* Тип маркера для неупорядоченных списков */
+    padding-left: 0;
+    /* Убираем стандартный отступ */
+    margin-left: 0;
+    /* Убираем стандартный отступ */
+    margin-bottom: 15px;
+}
+
+.lectures__items-li {
+    font-size: 1em;
+    line-height: 1.6;
+    color: rgb(0, 0, 0);
+    margin-left: 20px;
+    /* Отодвигаем элементы списка на уровень текста */
+}
+
+/* Таблицы */
+.lectures__items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.lectures__items-th {
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    font-weight: bold;
+}
+
+.lectures__items-td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+/* Картинки */
+.lectures__items-img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    padding: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}

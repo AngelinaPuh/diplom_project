@@ -12,7 +12,7 @@ function loadLectureText(lectureId) {
     // Показываем индикатор загрузки
     contentElement.innerHTML = '<p>Загрузка...</p>';
  
-    // Выполняем AJAX-запрос
+    // Выполняем AJAX-запрос 
     fetch(`actions/action_course-getLecture.php?id=${lectureId}`)
     .then(response => response.text()) // Получаем текстовый ответ
     .then(text => {

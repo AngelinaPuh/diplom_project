@@ -131,7 +131,7 @@
     transform: translateX(20%);
 }
 
-form {
+.auth-container form {
     background: #FFFFFF;
     display: flex;
     align-items: center;
@@ -142,12 +142,12 @@ form {
     text-align: center;
 }
 
-form h1 {
+.auth-container form h1 {
     font-weight: bold;
     margin: 0;
 }
 
-form input {
+.auth-container form input {
     background: #eee;
     border: none;
     padding: 12px 15px;
@@ -155,7 +155,7 @@ form input {
     width: 100%;
 }
 
-form button {
+.auth-container form button {
     border-radius: 20px;
     border: 1px solid #28A745;
     background: #28A745;
@@ -168,11 +168,11 @@ form button {
     transition: transform 80ms ease-in;
 }
 
-form button:active {
+.auth-container form button:active {
     transform: scale(0.95);
 }
 
-form button:focus {
+.auth-container form button:focus {
     outline: none;
 }
 

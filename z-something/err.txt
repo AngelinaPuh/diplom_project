@@ -1,0 +1,36 @@
+
+/* Сайдбар */
+.course__sidebar {
+    width: 250px;
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    overflow-y: auto;
+    height: 100%;
+    min-width: min-content;
+    max-width: 20%;
+
+    /* Для Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: #fff #444;
+}
+
+/* Для WebKit-браузеров */
+.course__sidebar::-webkit-scrollbar {
+    width: 10px;
+}
+
+.course__sidebar::-webkit-scrollbar-track {
+    background: #444;
+    border-radius: 20px;
+}
+
+.course__sidebar::-webkit-scrollbar-thumb {
+    background: #fff;
+    border-radius: 20px;
+    border: 2px solid #333;
+}
+
+.course__sidebar::-webkit-scrollbar-thumb:hover {
+    background: #f0f0f0;
+}

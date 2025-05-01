@@ -38,6 +38,7 @@
     <link rel="stylesheet" href="style/style_course.css"><!-- Стили для учебника(разделов, лекций, тестов), сайдбара -->
     <link rel="stylesheet" href="style/style_profile.css"><!--Стили для личного кабинета -->
     <link rel="stylesheet" href="style/style_authorization.css"><!--Стили для авторизации и регистрации -->
+    <link rel="stylesheet" href="style/style_lecture.css"><!--Стили для cамих лекций и регистрации -->
     <!-- Иконка -->
     <link rel="icon" href="images/favicon.png" type="image/x-icon">
 </head>

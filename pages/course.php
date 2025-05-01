@@ -2,7 +2,8 @@
 // В начале файла
 $startTime = microtime(true);
 // Функция для получения данных из кэша
-function getCache($key) {
+function getCache($key)
+{
     $cacheFile = __DIR__ . '/cache/' . md5($key) . '.cache';
     if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < 3600) { // Кэш живет 1 час
         // echo "Данные взяты из кэша для ключа: $key<br>";
@@ -13,7 +14,8 @@ function getCache($key) {
 }
 
 // Функция для сохранения данных в кэш
-function setCache($key, $data, $ttl = 3600) {
+function setCache($key, $data, $ttl = 3600)
+{
     $cacheDir = __DIR__ . '/cache/';
     if (!is_dir($cacheDir)) {
         if (!mkdir($cacheDir, 0777, true)) {
@@ -29,8 +31,9 @@ function setCache($key, $data, $ttl = 3600) {
 }
 
 // Функция для очистки кэша
-function clearCache($key) {
-    $cacheFile = __DIR__ . '/cache' . md5($key) . '.cache';
+function clearCache($key)
+{
+    $cacheFile = __DIR__ . '/cache/' . md5($key) . '.cache';
     if (file_exists($cacheFile)) {
         unlink($cacheFile);
     }
@@ -49,7 +52,7 @@ if (!$sections) {
 
     // Проверяем, успешно ли выполнен запрос
     if ($sectionsResult === false) {
-    // echo "Данные для разделов загружены из кэша.<br>";
+        // echo "Данные для разделов загружены из кэша.<br>";
         die("Ошибка при получении разделов: " . $dbcon->error);
     }
 
@@ -140,43 +143,53 @@ $isAuthorized = isset($_SESSION['authorization_dostup']) && $_SESSION['authoriza
     </div>
     <!-- блок контента -->
     <div class="course__content">
-    <?php foreach ($allLectures as $index => $lecture): ?>
-        <section 
-            id="lecture-<?php echo $lecture['id']; ?>" 
-            class="cours__lecture" 
-            style="display: none;"
-            data-next-lecture-id="<?php echo $index + 1 < count($allLectures) ? $allLectures[$index + 1]['id'] : ''; ?>"
-        >
-            <div class="cours__lecture-header">
-                <h2><?php echo htmlspecialchars($lecture['title_lecture']); ?></h2>
-            </div>
-            <article id="lecture-content-<?php echo $lecture['id']; ?>">
-                <!-- Здесь будет загружен текст лекции -->
-                <p>Загрузка...</p>
-            </article>
-            <div class="course__footer">
-                <button class="course__complete-lecture" data-lecture-id="<?php echo $lecture['id']; ?>">Завершить лекцию</button>
-                <button class="course__take-test" data-lecture-id="<?php echo $lecture['id']; ?>" style="display: none;">Пройти тест</button>   
-                <button class="course__next-lecture" data-lecture-id="<?php echo $lecture['id']; ?>">Следующая лекция</button>
-            </div>
-            <!-- блок теста -->
-            <div class="test-block" data-lecture-id="<?php echo $lecture['id']; ?>" style="display: none; margin-top: 20px;">
-                <h3>Тест по лекции</h3>
-                <form class="test-form">
-                    <label>
-                        Вопрос 1: Какая тема лекции?<br>
-                        <input type="text" name="question1" required>
-                    </label><br><br>
-                    <label>
-                        Вопрос 2: Что вы узнали?<br>
-                        <textarea name="question2" rows="4" cols="50" required></textarea>
-                    </label><br><br>
-                    <button type="submit">Отправить тест</button>
-                </form>
-            </div>
-        </section>
-    <?php endforeach; ?>
-</div>
+        <?php foreach ($allLectures as $index => $lecture): ?>
+            <section
+                id="lecture-<?php echo $lecture['id']; ?>"
+                class="cours__lecture"
+                style="display: none;"
+                data-next-lecture-id="<?php echo $index + 1 < count($allLectures) ? $allLectures[$index + 1]['id'] : ''; ?>">
+                <!-- <div class="cours__lecture-header">
+                <h2><?php //echo htmlspecialchars($lecture['title_lecture']); 
+                    ?></h2>
+            </div> -->
+                <article id="lecture-content-<?php echo $lecture['id']; ?>">
+                    <!-- Здесь будет загружен текст лекции -->
+                    <p>Загрузка...</p>
+                </article>
+                <div class="course__footer">
+                    <button class="course__complete-lecture" data-lecture-id="<?php echo $lecture['id']; ?>">Завершить лекцию</button>
+                    <button class="course__take-test" data-lecture-id="<?php echo $lecture['id']; ?>" style="display: none;">Пройти тест</button>
+                    <button class="course__next-lecture" data-lecture-id="<?php echo $lecture['id']; ?>">Следующая лекция</button>
+                </div>
+                <!-- блок теста -->
+                <div class="test-block" data-lecture-id="<?php echo $lecture['id']; ?>" style="display: none; margin-top: 20px;">
+                    <h3>Тест по теме <?php echo htmlspecialchars($lecture['title_lecture']); ?></h3> <!-- цикл вопросов -->
+                    <div class="question-block">
+                        <h3 class="question-title">Вопрос 1. Текст вопроса 1.</h3>
+                        <hr class="separator">
+                        <div class="test__form-block">
+                            <form class="test-form">
+                                <label class="answer-option">
+                                    <!-- варианты ответа -->
+                                    <input type="radio" name="answer" value="option1"> Вариант 1 радиокнопки
+                                </label>
+                                <label class="answer-option"> 
+                                    <input type="radio" name="answer" value="option2"> Вариант 2 радиокнопки 
+                                </label> 
+                                <label class="answer-option"> 
+                                    <input type="radio" name="answer" value="option3"> Вариант 3 радиокнопки 
+                                </label> 
+                                <label class="answer-option"> 
+                                    <input type="radio" name="answer" value="option4"> Вариант 4 радиокнопки 
+                                </label>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        <?php endforeach; ?>
+    </div>
 </div>
 <?php
 

@@ -131,8 +131,8 @@
 .cours__lecture {
     display: none; 
     background-color: #fff;
-    margin-bottom: 70px;
-    padding: 20px;
+    margin-bottom: 70px;  
+    padding:50px;
     border-radius: 8px;
     /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
     position: relative; /* Для позиционирования кнопки "Следующая лекция" */
@@ -222,4 +222,58 @@
 
 #test-form button:hover {
     background-color: #218838;
+}
+/* Стиль для основного блока */
+.question-block {
+    width: 100%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff; /* Белый фон */
+    border: 2px solid #000; /* Черная обводка */
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Стиль заголовка вопроса */
+.question-title {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Стиль линии разделителя */
+.separator {
+    border: none;
+    height: 1px;
+    background-color: #ccc;
+    margin: 10px 0;
+}
+
+/* Стиль для формы с вариантами ответов */
+.test__form-block {
+    background-color: #fff; /* Белый фон для формы */
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Тень для формы */
+}
+
+/* Стиль для вариантов ответов */
+.answer-option {
+    display: flex; /* Используем flexbox для выравнивания */
+    align-items: center; /* Выравнивание по вертикали */
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #333;
+}
+
+/* Стилизация радиокнопок */
+.answer-option input[type="radio"] {
+    margin-right: 10px; /* Отступ между радиокнопкой и текстом */
+    accent-color: #000; /* Цвет активной радиокнопки */
+}
+
+/* Стилизация текста рядом с радиокнопками */
+.answer-option label {
+    cursor: pointer;
+    text-align: left; /* Выравнивание текста по левому краю */
 }
