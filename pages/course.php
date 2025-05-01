@@ -147,9 +147,9 @@ $isAuthorized = isset($_SESSION['authorization_dostup']) && $_SESSION['authoriza
             style="display: none;"
             data-next-lecture-id="<?php echo $index + 1 < count($allLectures) ? $allLectures[$index + 1]['id'] : ''; ?>"
         >
-            <div class="cours__lecture-header">
-                <h2><?php echo htmlspecialchars($lecture['title_lecture']); ?></h2>
-            </div>
+            <!-- <div class="cours__lecture-header">
+                <h2><?php //echo htmlspecialchars($lecture['title_lecture']); ?></h2>
+            </div> -->
             <article id="lecture-content-<?php echo $lecture['id']; ?>">
                 <!-- Здесь будет загружен текст лекции -->
                 <p>Загрузка...</p>

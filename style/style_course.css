@@ -131,8 +131,8 @@
 .cours__lecture {
     display: none; 
     background-color: #fff;
-    margin-bottom: 70px;
-    padding: 20px;
+    margin-bottom: 70px;  
+    padding:50px;
     border-radius: 8px;
     /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
     position: relative; /* Для позиционирования кнопки "Следующая лекция" */
