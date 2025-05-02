@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Проверка наличия элементов
     if (!openAuthModal || !authModal || !modalBackground) {
-        console.error("Не все необходимые элементы найдены!");
+        // console.error("Не все необходимые элементы найдены!");
         return;
     }
 
@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const currentUrl = window.location.href;
         if (currentUrl) {
             localStorage.setItem('previousUrl', currentUrl);
-            console.log("Сохраненный URL:", currentUrl);
+            // console.log("Сохраненный URL:", currentUrl);
         } else {
             console.error("Не удалось получить текущий URL!");
         }

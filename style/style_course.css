@@ -277,3 +277,38 @@
     cursor: pointer;
     text-align: left; /* Выравнивание текста по левому краю */
 }
+.btn-form{
+    padding: 10px 20px;
+    background-color: #28A745;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.test-results {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.result-message {
+    font-weight: bold;
+    color: #333;
+}
+
+.result-grade {
+    font-size: 20px;
+    color: #007bff;
+}
+.grade-block {
+    margin-top: 5px;
+    text-align: center;
+}
+
+.grade-number {
+    font-size: 100px;
+    font-weight: bold;
+}

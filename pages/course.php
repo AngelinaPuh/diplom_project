@@ -35,7 +35,7 @@ require_once 'course_logic/logic.php';
             <?php endforeach; ?>
         </ul>
     </div>
-    <!-- блок контента -->
+    <!-- Блок контента -->
     <div class="course__content">
         <?php foreach ($allLectures as $index => $lecture): ?>
             <section
@@ -52,34 +52,44 @@ require_once 'course_logic/logic.php';
                     <button class="course__take-test" data-lecture-id="<?php echo $lecture['id']; ?>" style="display: none;">Пройти тест</button>
                     <button class="course__next-lecture" data-lecture-id="<?php echo $lecture['id']; ?>">Следующая лекция</button>
                 </div>
+                <hr class="separator">
                 <!-- блок теста -->
                 <div class="test-block" data-lecture-id="<?php echo $lecture['id']; ?>" style="display: none; margin-top: 20px;">
-                    <h3>Тест по теме <?php echo htmlspecialchars($lecture['title_lecture']); ?></h3> <!-- цикл вопросов -->
-                    <div class="question-block">
-                        <h3 class="question-title">Вопрос 1. Текст вопроса 1.</h3>
-                        <hr class="separator">
-                        <div class="test__form-block">
-                            <form class="test-form">
-                                <label class="answer-option">
-                                    <!-- варианты ответа -->
-                                    <input type="radio" name="answer" value="option1"> Вариант 1 радиокнопки
-                                </label>
-                                <label class="answer-option"> 
-                                    <input type="radio" name="answer" value="option2"> Вариант 2 радиокнопки 
-                                </label> 
-                                <label class="answer-option"> 
-                                    <input type="radio" name="answer" value="option3"> Вариант 3 радиокнопки 
-                                </label> 
-                                <label class="answer-option"> 
-                                    <input type="radio" name="answer" value="option4"> Вариант 4 радиокнопки 
-                                </label>
-                            </form>
+                    <?php if (!empty($lecture['test_questions'])): ?>
+                        <h3>Тест по теме <?php echo htmlspecialchars($lecture['title_lecture']); ?></h3>
+                        <form class="test-form" data-lecture-id="<?php echo $lecture['id']; ?>">
+                            <?php foreach ($lecture['test_questions'] as $question): ?>
+                                <div class="question-block">
+                                    <h3 class="question-title">Вопрос: <?php echo htmlspecialchars($question['title']); ?></h3>
+                                    <hr class="separator">
+                                    <div class="test__form-block">
+                                        <?php foreach ($question['options'] as $option): ?>
+                                            <label class="answer-option">
+                                                <input required type="radio" name="question_<?php echo $question['id']; ?>" value="<?php echo htmlspecialchars($option); ?>">
+                                                <?php echo htmlspecialchars($option); ?>
+                                            </label>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                            <button type="button" class="submit-test btn-form">Отправить тест</button>
+                        </form>
+                        <!-- Блок для вывода результатов -->
+                        <div class="test-results" style="margin-top: 20px; display: none;">
+                            <p  class="results-p"><strong>Результат:</strong> <span class="result-message"></span></p>
+                            <!-- Блок с оценкой -->
+                            <div class="grade-block">
+                                <span class="grade-number"></span>
+                            </div>
                         </div>
-                    </div>
+                    <?php else: ?>
+                        <p>Тест для этой лекции отсутствует.</p>
+                    <?php endif; ?>
                 </div>
             </section>
         <?php endforeach; ?>
     </div>
+    
 </div>
 <?php
 

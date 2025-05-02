@@ -80,7 +80,7 @@ sidebarLinks.forEach(link => {
     });
 });
 
-// Инициализация: показываем первую лекцию по умолчанию
+// Инициализация: ПОКАЗЫВАЕМ ПЕРВУЮ лекцию по умолчанию
 document.addEventListener('DOMContentLoaded', () => {
     try {
         const firstLink = document.querySelector('.course__accordion-link');
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Ошибка при инициализации:', error);
     }
 });
-// обработка кнопки "Завершить лекцию"
+// обработка кнопки "ЗАВЕРШИТЬ лекцию"
 document.addEventListener('DOMContentLoaded', () => {
     // Находим все кнопки "Завершить лекцию"
     const completeLectureButtons = document.querySelectorAll('.course__complete-lecture');
@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
-// обработка кнопок пройти тест
+// обработка кнопок ПРОЙТИ ТЕСТ
 document.addEventListener('DOMContentLoaded', () => {
     // Находим все кнопки "Пройти тест"
     const takeTestButtons = document.querySelectorAll('.course__take-test');
@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
-// обработка кнопки следующая лекция
+// обработка кнопки СЛЕДующая ЛЕКЦИЯ
 document.addEventListener('DOMContentLoaded', () => {
     // Находим все кнопки "Следующая лекция"
     const nextLectureButtons = document.querySelectorAll('.course__next-lecture');
@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
-// обработчик событий для кнопок аккордеона
+// обработчик событий для кнопок АККАРДИОН
 document.addEventListener('DOMContentLoaded', () => {
     // Находим все кнопки аккордеона
     const accordionButtons = document.querySelectorAll('.course__accordion-section');
@@ -239,5 +239,83 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.setAttribute('data-state', 'collapsed');
             }
         });
+    });
+});
+
+//обработчик отправки ответов из ТЕСТа на сервер через AJAX.
+document.addEventListener('DOMContentLoaded', function () {
+    // Обработка клика по кнопке "Отправить тест"
+    document.body.addEventListener('click', function (e) {
+        if (e.target.classList.contains('submit-test')) {
+            const form = e.target.closest('.test-form');
+            if (!form) return;
+
+            // Проверяем, что все вопросы отвечены
+            const questions = form.querySelectorAll('.question-block');
+            let allAnswered = true;
+
+            questions.forEach(questionBlock => {
+                const radioButtons = questionBlock.querySelectorAll('input[type="radio"]');
+                const isChecked = Array.from(radioButtons).some(radio => radio.checked);
+                if (!isChecked) {
+                    allAnswered = false;
+                }
+            });
+
+            if (!allAnswered) {
+                alert('Пожалуйста, ответьте на все вопросы перед отправкой теста.');
+                return; // Прерываем выполнение, если не все вопросы отвечены
+            }
+
+            // Если все вопросы отвечены, отправляем данные на сервер
+            const formData = new FormData(form);
+            const resultsBlock = form.nextElementSibling; // Блок для вывода результатов
+
+            fetch('actions/action_course-getTest.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Показываем блок с результатами
+                resultsBlock.style.display = 'block';
+
+                // Выводим сообщение о результатах
+                const resultMessage = resultsBlock.querySelector('.result-message');
+                const gradeNumber = resultsBlock.querySelector('.grade-number');
+
+                if (data.success) {
+                    resultMessage.textContent = 'Тест пройден успешно!';
+                } else {
+                    resultMessage.textContent = 'Некоторые ответы неверны.';
+                }
+
+                // Выводим оценку
+                const correctPercentage = data.correctPercentage;
+                let grade = '';
+                let color = '';
+                if (correctPercentage === 100) {
+                    grade = '5';
+                    color = 'green';
+                } else if (correctPercentage >= 75) {
+                    grade = '4';
+                    color = 'blue';
+                } else if (correctPercentage >= 50) {
+                    grade = '3';
+                    color = '#cbcb00';
+                } else {
+                    grade = '2';
+                    color = 'red';
+                }
+                // Отображаем оценку с цветом
+                gradeNumber.textContent = grade;
+                gradeNumber.style.fontSize = '100px';
+                gradeNumber.style.color = color;
+                gradeNumber.style.fontWeight = 'bold';
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+            });
+        }
     });
 });
