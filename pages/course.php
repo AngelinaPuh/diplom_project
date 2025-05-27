@@ -43,9 +43,15 @@ require_once 'course_logic/logic.php';
                 class="cours__lecture"
                 style="display: none;"
                 data-next-lecture-id="<?php echo $index + 1 < count($allLectures) ? $allLectures[$index + 1]['id'] : ''; ?>">
+                <!-- Блок для загрузки контента лекции -->
                 <article id="lecture-content-<?php echo $lecture['id']; ?>">
+                    <!-- Индикатор загрузки -->
+                    <div class="lecture-loading-indicator" style="display: block; text-align: center;">
+                        <p>Загрузка...</p>
+                        <div class="spinner"></div>
+                    </div>
                     <!-- Здесь будет загружен текст лекции -->
-                    <p>Загрузка...</p>
+                    <p style="display: none;">Содержимое лекции</p>
                 </article>
                 <div class="course__footer">
                     <button class="course__complete-lecture" data-lecture-id="<?php echo $lecture['id']; ?>">Завершить лекцию</button>
@@ -55,6 +61,7 @@ require_once 'course_logic/logic.php';
                 <hr class="separator">
                 <!-- блок теста -->
                 <div class="test-block" data-lecture-id="<?php echo $lecture['id']; ?>" style="display: none; margin-top: 20px;">
+
                     <?php if (!empty($lecture['test_questions'])): ?>
                         <h3>Тест по теме <?php echo htmlspecialchars($lecture['title_lecture']); ?></h3>
                         <form class="test-form" data-lecture-id="<?php echo $lecture['id']; ?>">
@@ -73,10 +80,13 @@ require_once 'course_logic/logic.php';
                                 </div>
                             <?php endforeach; ?>
                             <button type="button" class="submit-test btn-form">Отправить тест</button>
+                            <div class="test-loading-indicator" style="display: none;">
+                                <p>Загрузка теста...</p>
+                            </div>
                         </form>
                         <!-- Блок для вывода результатов -->
                         <div class="test-results" style="margin-top: 20px; display: none;">
-                            <p  class="results-p"><strong>Результат:</strong> <span class="result-message"></span></p>
+                            <p class="results-p"><strong>Результат:</strong> <span class="result-message"></span></p>
                             <!-- Блок с оценкой -->
                             <div class="grade-block">
                                 <span class="grade-number"></span>
@@ -89,11 +99,34 @@ require_once 'course_logic/logic.php';
             </section>
         <?php endforeach; ?>
     </div>
-    
+
 </div>
 <?php
-
 // В конце файла
 $endTime = microtime(true);
 // echo "<br>Время выполнения скрипта: " . round(($endTime - $startTime), 4) . " секунд.";
+// echo "<br>Загружено из кэша: " . ($isLoadedFromCache ? 'Да' : 'Нет');
 ?>
+<script>
+    const isLoadedFromCache = <?php echo $isLoadedFromCache ? 'true' : 'false'; ?>;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const cacheStatus = document.createElement('div');
+        cacheStatus.style.position = 'fixed';
+        cacheStatus.style.bottom = '10px';
+        cacheStatus.style.right = '10px';
+        cacheStatus.style.padding = '10px';
+        cacheStatus.style.background = '#f0f0f0';
+        cacheStatus.style.border = '1px solid #ccc';
+        cacheStatus.style.borderRadius = '5px';
+        // cacheStatus.textContent = isLoadedFromCache ?
+            // 'Данные загружены из кэша' :
+            // 'Данные загружены из базы данных';
+        document.body.appendChild(cacheStatus);
+
+        // Удалить сообщение через 5 секунд
+        setTimeout(() => {
+            document.body.removeChild(cacheStatus);
+        }, 5000);
+    });
+</script>
