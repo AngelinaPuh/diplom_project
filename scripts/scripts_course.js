@@ -335,6 +335,9 @@ document.addEventListener("DOMContentLoaded", function () {
       const form = e.target.closest(".test-form");
       if (!form) return;
 
+      // Находим индикатор загрузки
+      const loadingIndicator = form.querySelector(".test-loading-indicator");
+
       // Проверяем, что все вопросы отвечены
       const questions = form.querySelectorAll(".question-block");
       let allAnswered = true;
@@ -356,6 +359,9 @@ document.addEventListener("DOMContentLoaded", function () {
         return; // Прерываем выполнение, если не все вопросы отвечены
       }
 
+      // Показываем индикатор загрузки
+      loadingIndicator.style.display = "block";
+
       // Если все вопросы отвечены, отправляем данные на сервер
       const formData = new FormData(form);
       const resultsBlock = form.nextElementSibling; // Блок для вывода результатов
@@ -366,6 +372,9 @@ document.addEventListener("DOMContentLoaded", function () {
       })
         .then((response) => response.json())
         .then((data) => {
+          // Скрываем индикатор загрузки
+          loadingIndicator.style.display = "none";
+
           // Показываем блок с результатами
           resultsBlock.style.display = "block";
 
@@ -404,6 +413,9 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .catch((error) => {
           console.error("Ошибка:", error);
+
+          // Скрываем индикатор загрузки в случае ошибки
+          loadingIndicator.style.display = "none";
         });
     }
   });
@@ -481,3 +493,78 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 3000); // 3 секунды
   }
 });
+// обновление нажатие на меню аккордиона при активном тесте
+document.addEventListener("DOMContentLoaded", () => {
+  // Находим все ссылки аккордеона
+  const sidebarLinks = document.querySelectorAll(".course__accordion-link");
+
+  // Назначаем обработчики событий на каждую ссылку в сайдбаре
+  sidebarLinks.forEach((link) => {
+    link.addEventListener("click", function (event) {
+      event.preventDefault(); // Предотвращаем стандартное поведение ссылки
+
+      const targetId = this.getAttribute("href").substring(1); // Получаем ID лекции из href
+      const currentLecture = document.getElementById(targetId);
+
+      if (currentLecture) {
+        // Проверяем, активна ли текущая лекция
+        const isActive = this.classList.contains("active");
+
+        if (isActive) {
+          // Если лекция уже активна, проверяем, виден ли блок теста
+          const testBlock = currentLecture.querySelector(".test-block");
+          if (testBlock && testBlock.style.display === "block") {
+            // Скрываем блок теста
+            testBlock.style.display = "none";
+
+            // Показываем основной контент лекции
+            currentLecture.querySelector("article").style.display = "block";
+            currentLecture.querySelector(".course__footer").style.display =
+              "flex";
+          }
+        } else {
+          // Если лекция не активна, показываем её
+          showLecture(targetId);
+        }
+      }
+    });
+  });
+
+  // Функция для показа лекции
+  function showLecture(targetId) {
+    try {
+      // Скрываем все лекции
+      document.querySelectorAll(".cours__lecture").forEach((lecture) => {
+        lecture.style.display = "none";
+      });
+
+      // Находим и показываем нужную лекцию
+      const targetLecture = document.getElementById(targetId);
+      if (targetLecture) {
+        targetLecture.style.display = "block";
+
+        // Загружаем текст лекции
+        const lectureId = targetId.replace("lecture-", "");
+        loadLectureText(lectureId);
+      } else {
+        console.error(`Лекция с ID "${targetId}" не найдена.`);
+      }
+
+      // Убираем класс active со всех ссылок
+      document.querySelectorAll(".course__accordion-link").forEach((link) => {
+        link.classList.remove("active");
+      });
+
+      // Добавляем класс active к текущей ссылке
+      const activeLink = document.querySelector(
+        `.course__accordion-link[href="#${targetId}"]`
+      );
+      if (activeLink) {
+        activeLink.classList.add("active");
+      }
+    } catch (error) {
+      console.error("Ошибка при показе лекции:", error);
+    }
+  }
+});
+А;

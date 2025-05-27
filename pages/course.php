@@ -80,7 +80,8 @@ require_once 'course_logic/logic.php';
                             <?php endforeach; ?>
                             <button type="button" class="submit-test btn-form">Отправить тест</button>
                             <div class="test-loading-indicator" style="display: none;">
-                                <p>Загрузка теста...</p>
+                                <div class="spinner"></div>
+                                <p>Проверка результатов...</p>
                             </div>
                         </form>
                         <!-- Блок для вывода результатов -->
@@ -119,8 +120,8 @@ $endTime = microtime(true);
         cacheStatus.style.border = '1px solid #ccc';
         cacheStatus.style.borderRadius = '5px';
         // cacheStatus.textContent = isLoadedFromCache ?
-            // 'Данные загружены из кэша' :
-            // 'Данные загружены из базы данных';
+        // 'Данные загружены из кэша' :
+        // 'Данные загружены из базы данных';
         document.body.appendChild(cacheStatus);
 
         // Удалить сообщение через 5 секунд
