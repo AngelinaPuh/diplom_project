@@ -61,7 +61,6 @@ require_once 'course_logic/logic.php';
                 <hr class="separator">
                 <!-- блок теста -->
                 <div class="test-block" data-lecture-id="<?php echo $lecture['id']; ?>" style="display: none; margin-top: 20px;">
-
                     <?php if (!empty($lecture['test_questions'])): ?>
                         <h3>Тест по теме <?php echo htmlspecialchars($lecture['title_lecture']); ?></h3>
                         <form class="test-form" data-lecture-id="<?php echo $lecture['id']; ?>">

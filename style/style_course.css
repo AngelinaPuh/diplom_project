@@ -327,3 +327,12 @@
     transform: rotate(360deg);
   }
 }
+.course__back-to-lecture{
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}

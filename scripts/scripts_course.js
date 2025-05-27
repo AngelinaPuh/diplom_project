@@ -172,31 +172,102 @@ document.addEventListener("DOMContentLoaded", () => {
       // Получаем ID текущей лекции
       const lectureId = this.dataset.lectureId;
 
-      // Находим блок с тестом для этой лекции
-      const testBlock = document.querySelector(
+      // Находим текущий блок лекции и блок теста для этой лекции
+      const lectureBlock = document.querySelector(
+        `.cours__lecture#lecture-${lectureId}`
+      );
+      const testBlock = lectureBlock.querySelector(
         `.test-block[data-lecture-id="${lectureId}"]`
       );
+
       if (testBlock) {
+        // Очищаем выбранные ответы в тесте
+        const form = testBlock.querySelector(".test-form");
+        if (form) {
+          const radioButtons = form.querySelectorAll('input[type="radio"]');
+          radioButtons.forEach((radio) => {
+            radio.checked = false; // Сбрасываем выбор
+          });
+        }
+        // Скрываем блок с результатами теста
+        const resultsBlock = testBlock.querySelector(".test-results");
+        if (resultsBlock) {
+          resultsBlock.style.display = "none"; // Скрываем блок результатов
+          resultsBlock.querySelector(".result-message").textContent = ""; // Очищаем текст результата
+          resultsBlock.querySelector(".grade-number").textContent = ""; // Очищаем оценку
+        }
+        // Скрываем основной контент лекции
+        lectureBlock.querySelector("article").style.display = "none";
+        lectureBlock.querySelector(".course__footer").style.display = "none";
+
+        // Показываем блок теста
         testBlock.style.display = "block";
       }
     });
   });
+  // Добавляем обработчик для кнопки "Вернуться к лекции"
+  const testBlocks = document.querySelectorAll(".test-block");
+  testBlocks.forEach((testBlock) => {
+    const lectureId = testBlock.dataset.lectureId;
+    const backButton = document.createElement("button");
+    backButton.textContent = "Вернуться к лекции";
+    backButton.classList.add("course__back-to-lecture");
+    backButton.style.marginTop = "20px";
 
+    // Добавляем кнопку в блок теста
+    testBlock.appendChild(backButton);
+
+    backButton.addEventListener("click", () => {
+      // Находим родительский блок лекции
+      const lectureBlock = document.querySelector(
+        `.cours__lecture#lecture-${lectureId}`
+      );
+
+      if (lectureBlock) {
+        // Показываем основной контент лекции
+        lectureBlock.querySelector("article").style.display = "block";
+        lectureBlock.querySelector(".course__footer").style.display = "flex";
+
+        // Скрываем блок теста
+        testBlock.style.display = "none";
+      }
+    });
+  });
   // Обработка отправки теста
   const testForms = document.querySelectorAll(".test-form");
   testForms.forEach((form) => {
     form.addEventListener("submit", function (event) {
       event.preventDefault(); // Предотвращаем отправку формы
 
+      // Показываем индикатор загрузки
+      const loadingIndicator = form.querySelector(".test-loading-indicator");
+      loadingIndicator.style.display = "block";
+
       // Получаем ответы пользователя
-      const question1 = form.querySelector('[name="question1"]').value;
-      const question2 = form.querySelector('[name="question2"]').value;
+      const formData = new FormData(form);
+      const answers = {};
+      formData.forEach((value, key) => {
+        answers[key] = value;
+      });
 
-      // Пример обработки ответов
-      console.log("Ответ на вопрос 1:", question1);
-      console.log("Ответ на вопрос 2:", question2);
+      console.log("Ответы пользователя:", answers);
 
-      alert("Тест успешно отправлен!");
+      // Имитация отправки данных на сервер (замените на реальный AJAX-запрос)
+      setTimeout(() => {
+        loadingIndicator.style.display = "none";
+
+        // Показываем результаты теста
+        const resultsBlock = form.nextElementSibling; // Блок с результатами
+        if (resultsBlock && resultsBlock.classList.contains("test-results")) {
+          resultsBlock.style.display = "block";
+          resultsBlock.querySelector(".result-message").textContent =
+            "Тест успешно отправлен!";
+          resultsBlock.querySelector(".grade-number").textContent =
+            "Оценка: 5/5";
+        }
+
+        alert("Тест успешно отправлен!");
+      }, 1000); // Имитация задержки
     });
   });
 });
