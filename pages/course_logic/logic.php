@@ -88,8 +88,8 @@ function getTestQuestions($lectureId, $dbcon)
         return $cachedData;
     }
 
-    // Получаем id_test для лекции
-    $testQuery = "SELECT id_test FROM lecture WHERE id = ?";
+    // Получаем test_id  для лекции
+    $testQuery = "SELECT test_id  FROM lecture WHERE id = ?";
     $stmt = $dbcon->prepare($testQuery);
     if (!$stmt) {
         die("Ошибка подготовки запроса: " . $dbcon->error);
@@ -105,7 +105,7 @@ function getTestQuestions($lectureId, $dbcon)
     }
 
     $testData = $result->fetch_assoc();
-    $testId = $testData['id_test'];
+    $testId = $testData['test_id'];
 
     // Получаем вопросы для теста
     $questionsQuery = "

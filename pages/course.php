@@ -63,6 +63,10 @@ require_once 'course_logic/logic.php';
                 <div class="test-block" data-lecture-id="<?php echo $lecture['id']; ?>" style="display: none; margin-top: 20px;">
                     <?php if (!empty($lecture['test_questions'])): ?>
                         <h3>Тест по теме <?php echo htmlspecialchars($lecture['title_lecture']); ?></h3>
+                        <div class="test-loading-indicator" style="display: none;">
+                            <div class="spinner"></div>
+                            <p>Загрузка теста...</p>
+                        </div>
                         <form class="test-form" data-lecture-id="<?php echo $lecture['id']; ?>">
                             <?php foreach ($lecture['test_questions'] as $question): ?>
                                 <div class="question-block">
@@ -109,24 +113,23 @@ $endTime = microtime(true);
 ?>
 <script>
     const isLoadedFromCache = <?php echo $isLoadedFromCache ? 'true' : 'false'; ?>;
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     const cacheStatus = document.createElement('div');
+    //     cacheStatus.style.position = 'fixed';
+    //     cacheStatus.style.bottom = '10px';
+    //     cacheStatus.style.right = '10px';
+    //     cacheStatus.style.padding = '10px';
+    //     cacheStatus.style.background = '#f0f0f0';
+    //     cacheStatus.style.border = '1px solid #ccc';
+    //     cacheStatus.style.borderRadius = '5px';
+    //     cacheStatus.textContent = isLoadedFromCache ?
+    //     'Данные загружены из кэша' :
+    //     'Данные загружены из базы данных';
+    //     document.body.appendChild(cacheStatus);
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const cacheStatus = document.createElement('div');
-        cacheStatus.style.position = 'fixed';
-        cacheStatus.style.bottom = '10px';
-        cacheStatus.style.right = '10px';
-        cacheStatus.style.padding = '10px';
-        cacheStatus.style.background = '#f0f0f0';
-        cacheStatus.style.border = '1px solid #ccc';
-        cacheStatus.style.borderRadius = '5px';
-        // cacheStatus.textContent = isLoadedFromCache ?
-        // 'Данные загружены из кэша' :
-        // 'Данные загружены из базы данных';
-        document.body.appendChild(cacheStatus);
-
-        // Удалить сообщение через 5 секунд
-        setTimeout(() => {
-            document.body.removeChild(cacheStatus);
-        }, 5000);
-    });
+    //     // Удалить сообщение через 5 секунд
+    //     setTimeout(() => {
+    //         document.body.removeChild(cacheStatus);
+    //     }, 5000);
+    // });
 </script>

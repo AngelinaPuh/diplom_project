@@ -424,9 +424,22 @@ document.addEventListener("DOMContentLoaded", function () {
 // управление индикатором загрузки для тестов
 document.querySelectorAll(".course__take-test").forEach((button) => {
   button.addEventListener("click", function () {
-    const testBlock = this.closest(".test-block");
+    const lectureId = this.getAttribute("data-lecture-id");
+    // Ищем блок теста с таким же data-lecture-id
+    const testBlock = document.querySelector(`.test-block[data-lecture-id="${lectureId}"]`);
+    
+    if (!testBlock) {
+      console.error(`Блок теста с data-lecture-id="${lectureId}" не найден`);
+      return;
+    }
+
     const loadingIndicator = testBlock.querySelector(".test-loading-indicator");
     const testForm = testBlock.querySelector(".test-form");
+
+    if (!loadingIndicator || !testForm) {
+      console.error("Не найдены элементы .test-loading-indicator или .test-form внутри .test-block");
+      return;
+    }
 
     // Показываем индикатор загрузки
     loadingIndicator.style.display = "block";
@@ -436,13 +449,18 @@ document.querySelectorAll(".course__take-test").forEach((button) => {
     setTimeout(() => {
       loadingIndicator.style.display = "none";
       testForm.style.display = "block";
-    }, 1000); // Замените на реальную задержку или AJAX-запрос
+    }, 1000);
   });
 });
 // управление индикатором загрузки для лекции
 document.querySelectorAll(".course__next-lecture").forEach((button) => {
   button.addEventListener("click", function () {
-    const lectureSection = this.closest(".cours__lecture");
+    const lectureSection = this.closest(".course__lecture");
+    if (!lectureSection) {
+      console.error("Родительский элемент с классом .course__lecture не найден");
+      return;
+    }
+
     const lectureId = lectureSection.id.split("-")[1]; // Получаем ID лекции
     const loadingIndicator = lectureSection.querySelector(
       ".lecture-loading-indicator"
@@ -464,6 +482,7 @@ document.querySelectorAll(".course__next-lecture").forEach((button) => {
     }, 1000); // 1 секунда
   });
 });
+
 //  добавим проверку и анимацию загрузки:
 document.addEventListener("DOMContentLoaded", function () {
   // Проверяем, была ли загрузка из кэша
@@ -567,4 +586,3 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
-А;
