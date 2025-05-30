@@ -1,5 +1,5 @@
 <?php
-
+// diplom_project\pages\course.php
 // Подключаем логику
 require_once 'course_logic/cache_functions.php';
 require_once 'course_logic/logic.php';

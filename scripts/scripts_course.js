@@ -101,67 +101,87 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 // обработка кнопки "ЗАВЕРШИТЬ лекцию"
 document.addEventListener("DOMContentLoaded", () => {
-  // Находим все кнопки "Завершить лекцию"
-  const completeLectureButtons = document.querySelectorAll(
-    ".course__complete-lecture"
-  );
+  // Проверка авторизации (определи эту переменную где-то глобально)
+  // Например: const isUserAuthorized = true; // или false
+  if (typeof isUserAuthorized === "undefined") {
+    console.warn("Переменная isUserAuthorized не определена. Установи её значение.");
+  }
 
-  completeLectureButtons.forEach((button) => {
-    button.addEventListener("click", function () {
-      if (!isUserAuthorized) {
-        alert("Пожалуйста, авторизуйтесь, чтобы завершить лекцию.");
-        return;
-      }
+  // Функция для показа кнопки "Пройти тест" по ID лекции
+  function showTakeTestButton(lectureId) {
+    const takeTestButton = document.querySelector(`.course__take-test[data-lecture-id="${lectureId}"]`);
+    if (takeTestButton) {
+      takeTestButton.style.display = "inline-block";
+    }
+  }
 
-      // Получаем ID текущей лекции
-      const lectureId = this.dataset.lectureId;
+  // Обработчик кнопок "Завершить лекцию"
+  document.querySelectorAll(".course__complete-lecture").forEach((button) => {
+  button.addEventListener("click", function () {
+    if (!isUserAuthorized) {
+      alert("Пожалуйста, авторизуйтесь, чтобы завершить лекцию.");
+      return;
+    }
 
-      // Находим кнопку "Пройти тест" для этой лекции
-      const takeTestButton = document.querySelector(
-        `.course__take-test[data-lecture-id="${lectureId}"]`
-      );
-      if (takeTestButton) {
-        takeTestButton.style.display = "inline-block";
-      }
-    });
+    const lectureId = this.dataset.lectureId;
+
+    fetch("actions/action_complete_lecture.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: `lecture_id=${encodeURIComponent(lectureId)}`,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          if (data.isFirstTime) {
+            alert(data.message);
+          }
+          showTakeTestButton(lectureId);
+        } else {
+          console.error("Ошибка:", data.message);
+          alert("Не удалось завершить лекцию.");
+        }
+      })
+      .catch((error) => {
+        console.error("Ошибка сети:", error);
+        alert("Произошла ошибка при завершении лекции.");
+      });
   });
+});
 
-  // Находим все кнопки "Пройти тест"
-  const takeTestButtons = document.querySelectorAll(".course__take-test");
 
-  takeTestButtons.forEach((button) => {
+  // Обработчик кнопок "Пройти тест"
+  document.querySelectorAll(".course__take-test").forEach((button) => {
     button.addEventListener("click", function () {
-      // Получаем ID текущей лекции
       const lectureId = this.dataset.lectureId;
-
-      // Находим блок с тестом для этой лекции
-      const testBlock = document.querySelector(
-        `.test-block[data-lecture-id="${lectureId}"]`
-      );
+      const testBlock = document.querySelector(`.test-block[data-lecture-id="${lectureId}"]`);
       if (testBlock) {
         testBlock.style.display = "block";
       }
     });
   });
 
-  // Обработка отправки теста
-  const testForms = document.querySelectorAll(".test-form");
-  testForms.forEach((form) => {
-    form.addEventListener("submit", function (event) {
-      event.preventDefault(); // Предотвращаем отправку формы
-
-      // Получаем ответы пользователя
-      const question1 = form.querySelector('[name="question1"]').value;
-      const question2 = form.querySelector('[name="question2"]').value;
-
-      // Пример обработки ответов
-      console.log("Ответ на вопрос 1:", question1);
-      console.log("Ответ на вопрос 2:", question2);
-
-      alert("Тест успешно отправлен!");
-    });
+  // Обработка отправки теста — кнопка с типом "button", поэтому слушаем клик на кнопке "Отправить тест"
+  document.querySelectorAll(".test-form").forEach((form) => {
+    // В твоём HTML кнопка отправки — type="button", а не submit, поэтому нужно слушать клик именно на ней
+    const submitButton = form.querySelector(".submit-test");
+    if (submitButton) {
+      submitButton.addEventListener("click", () => {
+        // Собираем ответы
+        const formData = new FormData(form);
+        // Пример: вывод всех ответов в консоль
+        for (const [name, value] of formData.entries()) {
+          console.log(`Ответ на ${name}: ${value}`);
+        }
+        alert("Тест успешно отправлен!");
+        // Здесь можно добавить отправку данных на сервер через fetch/AJAX
+      });
+    }
   });
 });
+
 // обработка кнопок ПРОЙТИ ТЕСТ
 document.addEventListener("DOMContentLoaded", () => {
   // Находим все кнопки "Пройти тест"
@@ -426,8 +446,10 @@ document.querySelectorAll(".course__take-test").forEach((button) => {
   button.addEventListener("click", function () {
     const lectureId = this.getAttribute("data-lecture-id");
     // Ищем блок теста с таким же data-lecture-id
-    const testBlock = document.querySelector(`.test-block[data-lecture-id="${lectureId}"]`);
-    
+    const testBlock = document.querySelector(
+      `.test-block[data-lecture-id="${lectureId}"]`
+    );
+
     if (!testBlock) {
       console.error(`Блок теста с data-lecture-id="${lectureId}" не найден`);
       return;
@@ -437,7 +459,9 @@ document.querySelectorAll(".course__take-test").forEach((button) => {
     const testForm = testBlock.querySelector(".test-form");
 
     if (!loadingIndicator || !testForm) {
-      console.error("Не найдены элементы .test-loading-indicator или .test-form внутри .test-block");
+      console.error(
+        "Не найдены элементы .test-loading-indicator или .test-form внутри .test-block"
+      );
       return;
     }
 
@@ -457,7 +481,9 @@ document.querySelectorAll(".course__next-lecture").forEach((button) => {
   button.addEventListener("click", function () {
     const lectureSection = this.closest(".course__lecture");
     if (!lectureSection) {
-      console.error("Родительский элемент с классом .course__lecture не найден");
+      console.error(
+        "Родительский элемент с классом .course__lecture не найден"
+      );
       return;
     }
 

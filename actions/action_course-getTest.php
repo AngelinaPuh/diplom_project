@@ -1,5 +1,5 @@
 <?php
-// actions/action_course-getTest.php
+// diplom_project\actions/action_course-getTest.php
 session_start();
 require_once("../database/dbconnect.php");
 

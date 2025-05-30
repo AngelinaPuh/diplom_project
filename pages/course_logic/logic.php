@@ -1,12 +1,12 @@
 <?php
-// pages/course_logic/logic.php
+// diplom_project/pages/course_logic/logic.php
 
 // В начале файла
 $startTime = microtime(true);
 
 // Подключение функций кэширования
 require_once 'cache_functions.php';
-require_once("database/dbconnect.php");
+require_once(__DIR__ . "/../../database/dbconnect.php");
 
 // Флаг для отслеживания загрузки из кэша
 $isLoadedFromCache = true;
@@ -27,7 +27,7 @@ if (!$sections) {
 
     $sections = $sectionsResult->fetch_all(MYSQLI_ASSOC);
     setCache($sectionsCacheKey, $sections);
-} 
+}
 
 // Проверяем кэш для лекций
 $lecturesCacheKey = 'lectures_data';
@@ -45,7 +45,7 @@ if (!$lectures) {
 
     $lectures = $lecturesResult->fetch_all(MYSQLI_ASSOC);
     setCache($lecturesCacheKey, $lectures);
-} 
+}
 
 // Группируем лекции по разделам
 $lecturesBySection = [];
@@ -76,7 +76,7 @@ $isAuthorized = isset($_SESSION['authorization_dostup']) && $_SESSION['authoriza
 // В конце файла
 $endTime = microtime(true);
 
-// работаем с тестами!!!!!!!
+// работаем с тестами!!!!!!!-----------------------------------------------------------------------------------------------------------------------------------------------
 
 // Функция для получения тестов и вопросов, но снчала проверяется есть ли кэш этих тестов
 function getTestQuestions($lectureId, $dbcon)

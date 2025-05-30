@@ -1,5 +1,5 @@
 <?php
-// actions/action_course-getLecture.php
+// diplom_project\actions/action_course-getLecture.php
 require_once("../database/dbconnect.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {

@@ -1,0 +1,1216 @@
+const sidebarLinks = document.querySelectorAll(".course__accordion-link");
+// Получаем все секции лекций
+const lectures = document.querySelectorAll(".cours__lecture");
+// Функция для загрузки текста лекции через AJAX
+function loadLectureText(lectureId) {
+  const contentElement = document.getElementById(
+    `lecture-content-${lectureId}`
+  );
+  if (!contentElement) {
+    console.error(`Элемент с ID "lecture-content-${lectureId}" не найден.`);
+    return;
+  }
+
+  // Показываем индикатор загрузки
+  contentElement.innerHTML = "<p>Загрузка...</p>";
+
+  // Выполняем AJAX-запрос
+  fetch(`actions/action_course-getLecture.php?id=${lectureId}`)
+    .then((response) => response.text()) // Получаем текстовый ответ
+    .then((text) => {
+      // console.log('Ответ сервера:', text); // Отладочная информация
+      try {
+        const data = JSON.parse(text); // Пытаемся разобрать JSON
+        if (data.success) {
+          contentElement.innerHTML =
+            data.text || "<p>Текст лекции отсутствует.</p>";
+        } else {
+          console.error("Ошибка:", data.message);
+          contentElement.innerHTML = `<p>${data.message}</p>`;
+        }
+      } catch (error) {
+        console.error("Ошибка при разборе JSON:", error);
+        contentElement.innerHTML = "<p>Не удалось загрузить текст лекции.</p>";
+      }
+    })
+    .catch((error) => {
+      console.error("Ошибка при загрузке текста лекции:", error);
+      contentElement.innerHTML = "<p>Не удалось загрузить текст лекции.</p>";
+    });
+}
+
+// Модифицируем функцию showLecture
+function showLecture(targetId) {
+  try {
+    // Скрываем все лекции
+    document.querySelectorAll(".cours__lecture").forEach((lecture) => {
+      lecture.style.display = "none";
+    });
+
+    // Находим и показываем нужную лекцию
+    const targetLecture = document.getElementById(targetId);
+    if (targetLecture) {
+      targetLecture.style.display = "block";
+
+      // Загружаем текст лекции
+      const lectureId = targetId.replace("lecture-", "");
+      loadLectureText(lectureId);
+    } else {
+      console.error(`Лекция с ID "${targetId}" не найдена.`);
+    }
+
+    // Убираем класс active со всех ссылок
+    document.querySelectorAll(".course__accordion-link").forEach((link) => {
+      link.classList.remove("active");
+    });
+
+    // Добавляем класс active к текущей ссылке
+    const activeLink = document.querySelector(
+      `.course__accordion-link[href="#${targetId}"]`
+    );
+    if (activeLink) {
+      activeLink.classList.add("active");
+    }
+  } catch (error) {
+    console.error("Ошибка при показе лекции:", error);
+  }
+}
+
+// Назначаем обработчики событий на каждую ссылку в сайдбаре
+sidebarLinks.forEach((link) => {
+  link.addEventListener("click", function (event) {
+    event.preventDefault(); // Предотвращаем стандартное поведение ссылки
+    const targetId = this.getAttribute("href").substring(1); // Получаем ID лекции из href
+    showLecture(targetId); // Показываем соответствующую лекцию
+  });
+});
+
+// Инициализация: ПОКАЗЫВАЕМ ПЕРВУЮ лекцию по умолчанию
+document.addEventListener("DOMContentLoaded", () => {
+  try {
+    const firstLink = document.querySelector(".course__accordion-link");
+    if (firstLink) {
+      const firstLectureId = firstLink.getAttribute("href").substring(1);
+      showLecture(firstLectureId); // Показываем первую лекцию
+    } else {
+      console.warn("Нет доступных лекций для отображения.");
+    }
+  } catch (error) {
+    console.error("Ошибка при инициализации:", error);
+  }
+});
+// обработка кнопки "ЗАВЕРШИТЬ лекцию"
+document.addEventListener("DOMContentLoaded", () => {
+  // Находим все кнопки "Завершить лекцию"
+  const completeLectureButtons = document.querySelectorAll(
+    ".course__complete-lecture"
+  );
+
+  completeLectureButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      if (!isUserAuthorized) {
+        alert("Пожалуйста, авторизуйтесь, чтобы завершить лекцию.");
+        return;
+      }
+
+      // Получаем ID текущей лекции
+      const lectureId = this.dataset.lectureId;
+
+      // Находим кнопку "Пройти тест" для этой лекции
+      const takeTestButton = document.querySelector(
+        `.course__take-test[data-lecture-id="${lectureId}"]`
+      );
+      if (takeTestButton) {
+        takeTestButton.style.display = "inline-block";
+      }
+    });
+  });
+
+  // Находим все кнопки "Пройти тест"
+  const takeTestButtons = document.querySelectorAll(".course__take-test");
+
+  takeTestButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      // Получаем ID текущей лекции
+      const lectureId = this.dataset.lectureId;
+
+      // Находим блок с тестом для этой лекции
+      const testBlock = document.querySelector(
+        `.test-block[data-lecture-id="${lectureId}"]`
+      );
+      if (testBlock) {
+        testBlock.style.display = "block";
+      }
+    });
+  });
+
+  // Обработка отправки теста
+  const testForms = document.querySelectorAll(".test-form");
+  testForms.forEach((form) => {
+    form.addEventListener("submit", function (event) {
+      event.preventDefault(); // Предотвращаем отправку формы
+
+      // Получаем ответы пользователя
+      const question1 = form.querySelector('[name="question1"]').value;
+      const question2 = form.querySelector('[name="question2"]').value;
+
+      // Пример обработки ответов
+      console.log("Ответ на вопрос 1:", question1);
+      console.log("Ответ на вопрос 2:", question2);
+
+      alert("Тест успешно отправлен!");
+    });
+  });
+});
+// обработка кнопок ПРОЙТИ ТЕСТ
+document.addEventListener("DOMContentLoaded", () => {
+  // Находим все кнопки "Пройти тест"
+  const takeTestButtons = document.querySelectorAll(".course__take-test");
+
+  takeTestButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      // Получаем ID текущей лекции
+      const lectureId = this.dataset.lectureId;
+
+      // Находим текущий блок лекции и блок теста для этой лекции
+      const lectureBlock = document.querySelector(
+        `.cours__lecture#lecture-${lectureId}`
+      );
+      const testBlock = lectureBlock.querySelector(
+        `.test-block[data-lecture-id="${lectureId}"]`
+      );
+
+      if (testBlock) {
+        // Очищаем выбранные ответы в тесте
+        const form = testBlock.querySelector(".test-form");
+        if (form) {
+          const radioButtons = form.querySelectorAll('input[type="radio"]');
+          radioButtons.forEach((radio) => {
+            radio.checked = false; // Сбрасываем выбор
+          });
+        }
+        // Скрываем блок с результатами теста
+        const resultsBlock = testBlock.querySelector(".test-results");
+        if (resultsBlock) {
+          resultsBlock.style.display = "none"; // Скрываем блок результатов
+          resultsBlock.querySelector(".result-message").textContent = ""; // Очищаем текст результата
+          resultsBlock.querySelector(".grade-number").textContent = ""; // Очищаем оценку
+        }
+        // Скрываем основной контент лекции
+        lectureBlock.querySelector("article").style.display = "none";
+        lectureBlock.querySelector(".course__footer").style.display = "none";
+
+        // Показываем блок теста
+        testBlock.style.display = "block";
+      }
+    });
+  });
+  // Добавляем обработчик для кнопки "Вернуться к лекции"
+  const testBlocks = document.querySelectorAll(".test-block");
+  testBlocks.forEach((testBlock) => {
+    const lectureId = testBlock.dataset.lectureId;
+    const backButton = document.createElement("button");
+    backButton.textContent = "Вернуться к лекции";
+    backButton.classList.add("course__back-to-lecture");
+    backButton.style.marginTop = "20px";
+
+    // Добавляем кнопку в блок теста
+    testBlock.appendChild(backButton);
+
+    backButton.addEventListener("click", () => {
+      // Находим родительский блок лекции
+      const lectureBlock = document.querySelector(
+        `.cours__lecture#lecture-${lectureId}`
+      );
+
+      if (lectureBlock) {
+        // Показываем основной контент лекции
+        lectureBlock.querySelector("article").style.display = "block";
+        lectureBlock.querySelector(".course__footer").style.display = "flex";
+
+        // Скрываем блок теста
+        testBlock.style.display = "none";
+      }
+    });
+  });
+  // Обработка отправки теста
+  const testForms = document.querySelectorAll(".test-form");
+  testForms.forEach((form) => {
+    form.addEventListener("submit", function (event) {
+      event.preventDefault(); // Предотвращаем отправку формы
+
+      // Показываем индикатор загрузки
+      const loadingIndicator = form.querySelector(".test-loading-indicator");
+      loadingIndicator.style.display = "block";
+
+      // Получаем ответы пользователя
+      const formData = new FormData(form);
+      const answers = {};
+      formData.forEach((value, key) => {
+        answers[key] = value;
+      });
+
+      console.log("Ответы пользователя:", answers);
+
+      // Имитация отправки данных на сервер (замените на реальный AJAX-запрос)
+      setTimeout(() => {
+        loadingIndicator.style.display = "none";
+
+        // Показываем результаты теста
+        const resultsBlock = form.nextElementSibling; // Блок с результатами
+        if (resultsBlock && resultsBlock.classList.contains("test-results")) {
+          resultsBlock.style.display = "block";
+          resultsBlock.querySelector(".result-message").textContent =
+            "Тест успешно отправлен!";
+          resultsBlock.querySelector(".grade-number").textContent =
+            "Оценка: 5/5";
+        }
+
+        alert("Тест успешно отправлен!");
+      }, 1000); // Имитация задержки
+    });
+  });
+});
+// обработка кнопки СЛЕДующая ЛЕКЦИЯ
+document.addEventListener("DOMContentLoaded", () => {
+  // Находим все кнопки "Следующая лекция"
+  const nextLectureButtons = document.querySelectorAll(".course__next-lecture");
+
+  nextLectureButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      // Получаем родительскую секцию (текущую лекцию)
+      const currentLecture = this.closest(".cours__lecture");
+      const nextLectureId = currentLecture.dataset.nextLectureId;
+
+      if (nextLectureId) {
+        // Скрываем текущую лекцию
+        currentLecture.style.display = "none";
+
+        // Показываем следующую лекцию
+        const nextLecture = document.getElementById(`lecture-${nextLectureId}`);
+        if (nextLecture) {
+          nextLecture.style.display = "block";
+
+          // Загружаем текст следующей лекции
+          loadLectureText(nextLectureId);
+        }
+      } else {
+        alert("Это последняя лекция.");
+      }
+    });
+  });
+});
+// обработчик событий для кнопок АККАРДИОН
+document.addEventListener("DOMContentLoaded", () => {
+  // Находим все кнопки аккордеона
+  const accordionButtons = document.querySelectorAll(
+    ".course__accordion-section"
+  );
+
+  accordionButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      // Находим следующий элемент <ul> с лекциями
+      const lectureList = this.nextElementSibling;
+
+      // Проверяем текущее состояние
+      const isCollapsed = this.getAttribute("data-state") === "collapsed";
+
+      if (isCollapsed) {
+        // Разворачиваем список
+        lectureList.style.display = "block";
+        this.setAttribute("data-state", "expanded");
+      } else {
+        // Сворачиваем список
+        lectureList.style.display = "none";
+        this.setAttribute("data-state", "collapsed");
+      }
+    });
+  });
+});
+//обработчик отправки ответов из ТЕСТа на сервер через AJAX.
+document.addEventListener("DOMContentLoaded", function () {
+  // Обработка клика по кнопке "Отправить тест"
+  document.body.addEventListener("click", function (e) {
+    if (e.target.classList.contains("submit-test")) {
+      const form = e.target.closest(".test-form");
+      if (!form) return;
+
+      // Находим индикатор загрузки
+      const loadingIndicator = form.querySelector(".test-loading-indicator");
+
+      // Проверяем, что все вопросы отвечены
+      const questions = form.querySelectorAll(".question-block");
+      let allAnswered = true;
+
+      questions.forEach((questionBlock) => {
+        const radioButtons = questionBlock.querySelectorAll(
+          'input[type="radio"]'
+        );
+        const isChecked = Array.from(radioButtons).some(
+          (radio) => radio.checked
+        );
+        if (!isChecked) {
+          allAnswered = false;
+        }
+      });
+
+      if (!allAnswered) {
+        alert("Пожалуйста, ответьте на все вопросы перед отправкой теста.");
+        return; // Прерываем выполнение, если не все вопросы отвечены
+      }
+
+      // Показываем индикатор загрузки
+      loadingIndicator.style.display = "block";
+
+      // Если все вопросы отвечены, отправляем данные на сервер
+      const formData = new FormData(form);
+      const resultsBlock = form.nextElementSibling; // Блок для вывода результатов
+
+      fetch("actions/action_course-getTest.php", {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // Скрываем индикатор загрузки
+          loadingIndicator.style.display = "none";
+
+          // Показываем блок с результатами
+          resultsBlock.style.display = "block";
+
+          // Выводим сообщение о результатах
+          const resultMessage = resultsBlock.querySelector(".result-message");
+          const gradeNumber = resultsBlock.querySelector(".grade-number");
+
+          if (data.success) {
+            resultMessage.textContent = "Тест пройден успешно!";
+          } else {
+            resultMessage.textContent = "Некоторые ответы неверны.";
+          }
+
+          // Выводим оценку
+          const correctPercentage = data.correctPercentage;
+          let grade = "";
+          let color = "";
+          if (correctPercentage === 100) {
+            grade = "5";
+            color = "green";
+          } else if (correctPercentage >= 75) {
+            grade = "4";
+            color = "blue";
+          } else if (correctPercentage >= 50) {
+            grade = "3";
+            color = "#cbcb00";
+          } else {
+            grade = "2";
+            color = "red";
+          }
+          // Отображаем оценку с цветом
+          gradeNumber.textContent = grade;
+          gradeNumber.style.fontSize = "100px";
+          gradeNumber.style.color = color;
+          gradeNumber.style.fontWeight = "bold";
+        })
+        .catch((error) => {
+          console.error("Ошибка:", error);
+
+          // Скрываем индикатор загрузки в случае ошибки
+          loadingIndicator.style.display = "none";
+        });
+    }
+  });
+});
+
+// управление индикатором загрузки для тестов
+document.querySelectorAll(".course__take-test").forEach((button) => {
+  button.addEventListener("click", function () {
+    const lectureId = this.getAttribute("data-lecture-id");
+    // Ищем блок теста с таким же data-lecture-id
+    const testBlock = document.querySelector(`.test-block[data-lecture-id="${lectureId}"]`);
+    
+    if (!testBlock) {
+      console.error(`Блок теста с data-lecture-id="${lectureId}" не найден`);
+      return;
+    }
+
+    const loadingIndicator = testBlock.querySelector(".test-loading-indicator");
+    const testForm = testBlock.querySelector(".test-form");
+
+    if (!loadingIndicator || !testForm) {
+      console.error("Не найдены элементы .test-loading-indicator или .test-form внутри .test-block");
+      return;
+    }
+
+    // Показываем индикатор загрузки
+    loadingIndicator.style.display = "block";
+    testForm.style.display = "none";
+
+    // Имитация асинхронной загрузки теста (замените на реальный AJAX-запрос)
+    setTimeout(() => {
+      loadingIndicator.style.display = "none";
+      testForm.style.display = "block";
+    }, 1000);
+  });
+});
+// управление индикатором загрузки для лекции
+document.querySelectorAll(".course__next-lecture").forEach((button) => {
+  button.addEventListener("click", function () {
+    const lectureSection = this.closest(".course__lecture");
+    if (!lectureSection) {
+      console.error("Родительский элемент с классом .course__lecture не найден");
+      return;
+    }
+
+    const lectureId = lectureSection.id.split("-")[1]; // Получаем ID лекции
+    const loadingIndicator = lectureSection.querySelector(
+      ".lecture-loading-indicator"
+    );
+    const lectureContent = lectureSection.querySelector("p");
+
+    // Показываем индикатор загрузки
+    loadingIndicator.style.display = "block";
+    lectureContent.style.display = "none";
+
+    // Имитация загрузки контента лекции
+    setTimeout(() => {
+      // Скрываем индикатор загрузки
+      loadingIndicator.style.display = "none";
+
+      // Загружаем содержимое лекции (замените на реальный AJAX-запрос)
+      lectureContent.textContent = `Содержимое лекции ${lectureId}`;
+      lectureContent.style.display = "block";
+    }, 1000); // 1 секунда
+  });
+});
+
+//  добавим проверку и анимацию загрузки:
+document.addEventListener("DOMContentLoaded", function () {
+  // Проверяем, была ли загрузка из кэша
+  if (!isLoadedFromCache) {
+    // Если не из кэша - показываем спиннер на 3 секунды
+    const loadingOverlay = document.createElement("div");
+    loadingOverlay.style.position = "fixed";
+    loadingOverlay.style.top = "0";
+    loadingOverlay.style.left = "0";
+    loadingOverlay.style.width = "100%";
+    loadingOverlay.style.height = "100%";
+    loadingOverlay.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
+    loadingOverlay.style.zIndex = "9999";
+    loadingOverlay.style.display = "flex";
+    loadingOverlay.style.justifyContent = "center";
+    loadingOverlay.style.alignItems = "center";
+
+    const spinner = document.createElement("div");
+    spinner.classList.add("spinner");
+
+    loadingOverlay.appendChild(spinner);
+    document.body.appendChild(loadingOverlay);
+
+    // Автоматически скрываем через 3 секунды
+    setTimeout(() => {
+      document.body.removeChild(loadingOverlay);
+    }, 3000); // 3 секунды
+  }
+});
+// обновление нажатие на меню аккордиона при активном тесте
+document.addEventListener("DOMContentLoaded", () => {
+  // Находим все ссылки аккордеона
+  const sidebarLinks = document.querySelectorAll(".course__accordion-link");
+
+  // Назначаем обработчики событий на каждую ссылку в сайдбаре
+  sidebarLinks.forEach((link) => {
+    link.addEventListener("click", function (event) {
+      event.preventDefault(); // Предотвращаем стандартное поведение ссылки
+
+      const targetId = this.getAttribute("href").substring(1); // Получаем ID лекции из href
+      const currentLecture = document.getElementById(targetId);
+
+      if (currentLecture) {
+        // Проверяем, активна ли текущая лекция
+        const isActive = this.classList.contains("active");
+
+        if (isActive) {
+          // Если лекция уже активна, проверяем, виден ли блок теста
+          const testBlock = currentLecture.querySelector(".test-block");
+          if (testBlock && testBlock.style.display === "block") {
+            // Скрываем блок теста
+            testBlock.style.display = "none";
+
+            // Показываем основной контент лекции
+            currentLecture.querySelector("article").style.display = "block";
+            currentLecture.querySelector(".course__footer").style.display =
+              "flex";
+          }
+        } else {
+          // Если лекция не активна, показываем её
+          showLecture(targetId);
+        }
+      }
+    });
+  });
+
+  // Функция для показа лекции
+  function showLecture(targetId) {
+    try {
+      // Скрываем все лекции
+      document.querySelectorAll(".cours__lecture").forEach((lecture) => {
+        lecture.style.display = "none";
+      });
+
+      // Находим и показываем нужную лекцию
+      const targetLecture = document.getElementById(targetId);
+      if (targetLecture) {
+        targetLecture.style.display = "block";
+
+        // Загружаем текст лекции
+        const lectureId = targetId.replace("lecture-", "");
+        loadLectureText(lectureId);
+      } else {
+        console.error(`Лекция с ID "${targetId}" не найдена.`);
+      }
+
+      // Убираем класс active со всех ссылок
+      document.querySelectorAll(".course__accordion-link").forEach((link) => {
+        link.classList.remove("active");
+      });
+
+      // Добавляем класс active к текущей ссылке
+      const activeLink = document.querySelector(
+        `.course__accordion-link[href="#${targetId}"]`
+      );
+      if (activeLink) {
+        activeLink.classList.add("active");
+      }
+    } catch (error) {
+      console.error("Ошибка при показе лекции:", error);
+    }
+  }
+});
+<?php
+// diplom_project\pages\course.php
+// Подключаем логику
+require_once 'course_logic/cache_functions.php';
+require_once 'course_logic/logic.php';
+?>
+<script>
+    // Передаем состояние авторизации в JavaScript
+    const isUserAuthorized = <?php echo $isAuthorized ? 'true' : 'false'; ?>;
+</script>
+
+<!-- Главный контейнер -->
+<div class="course__container">
+    <!-- блок сайдбара -->
+    <div class="course__sidebar">
+        <h3>Архитектура компьютерных систем</h3>
+        <ul class="course__accordion">
+            <?php foreach ($sections as $section): ?>
+                <li>
+                    <button class="course__accordion-section" data-state="collapsed">
+                        <?php echo htmlspecialchars($section['title_section']); ?>
+                    </button>
+                    <ul class="course__accordion-lecture" style="display: none;">
+                        <?php if (isset($lecturesBySection[$section['id']])): ?>
+                            <?php foreach ($lecturesBySection[$section['id']] as $lecture): ?>
+                                <li>
+                                    <a href="#lecture-<?php echo $lecture['id']; ?>" class="course__accordion-link">
+                                        <?php echo htmlspecialchars($lecture['title_lecture']); ?>
+                                    </a>
+                                </li>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </ul>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+    <!-- Блок контента -->
+    <div class="course__content">
+        <?php foreach ($allLectures as $index => $lecture): ?>
+            <section
+                id="lecture-<?php echo $lecture['id']; ?>"
+                class="cours__lecture"
+                style="display: none;"
+                data-next-lecture-id="<?php echo $index + 1 < count($allLectures) ? $allLectures[$index + 1]['id'] : ''; ?>">
+                <!-- Блок для загрузки контента лекции -->
+                <article id="lecture-content-<?php echo $lecture['id']; ?>">
+                    <!-- Индикатор загрузки -->
+                    <div class="lecture-loading-indicator" style="display: block; text-align: center;">
+                        <p>Загрузка...</p>
+                        <div class="spinner"></div>
+                    </div>
+                    <!-- Здесь будет загружен текст лекции -->
+                    <p style="display: none;">Содержимое лекции</p>
+                </article>
+                <div class="course__footer">
+                    <button class="course__complete-lecture" data-lecture-id="<?php echo $lecture['id']; ?>">Завершить лекцию</button>
+                    <button class="course__take-test" data-lecture-id="<?php echo $lecture['id']; ?>" style="display: none;">Пройти тест</button>
+                    <button class="course__next-lecture" data-lecture-id="<?php echo $lecture['id']; ?>">Следующая лекция</button>
+                </div>
+                <hr class="separator">
+                <!-- блок теста -->
+                <div class="test-block" data-lecture-id="<?php echo $lecture['id']; ?>" style="display: none; margin-top: 20px;">
+                    <?php if (!empty($lecture['test_questions'])): ?>
+                        <h3>Тест по теме <?php echo htmlspecialchars($lecture['title_lecture']); ?></h3>
+                        <div class="test-loading-indicator" style="display: none;">
+                            <div class="spinner"></div>
+                            <p>Загрузка теста...</p>
+                        </div>
+                        <form class="test-form" data-lecture-id="<?php echo $lecture['id']; ?>">
+                            <?php foreach ($lecture['test_questions'] as $question): ?>
+                                <div class="question-block">
+                                    <h3 class="question-title">Вопрос: <?php echo htmlspecialchars($question['title']); ?></h3>
+                                    <hr class="separator">
+                                    <div class="test__form-block">
+                                        <?php foreach ($question['options'] as $option): ?>
+                                            <label class="answer-option">
+                                                <input required type="radio" name="question_<?php echo $question['id']; ?>" value="<?php echo htmlspecialchars($option); ?>">
+                                                <?php echo htmlspecialchars($option); ?>
+                                            </label>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                            <button type="button" class="submit-test btn-form">Отправить тест</button>
+                            <div class="test-loading-indicator" style="display: none;">
+                                <div class="spinner"></div>
+                                <p>Проверка результатов...</p>
+                            </div>
+                        </form>
+                        <!-- Блок для вывода результатов -->
+                        <div class="test-results" style="margin-top: 20px; display: none;">
+                            <p class="results-p"><strong>Результат:</strong> <span class="result-message"></span></p>
+                            <!-- Блок с оценкой -->
+                            <div class="grade-block">
+                                <span class="grade-number"></span>
+                            </div>
+                        </div>
+                    <?php else: ?>
+                        <p>Тест для этой лекции отсутствует.</p>
+                    <?php endif; ?>
+                </div>
+            </section>
+        <?php endforeach; ?>
+    </div>
+
+</div>
+<?php
+// В конце файла
+$endTime = microtime(true);
+// echo "<br>Время выполнения скрипта: " . round(($endTime - $startTime), 4) . " секунд.";
+// echo "<br>Загружено из кэша: " . ($isLoadedFromCache ? 'Да' : 'Нет');
+?>
+<?php
+// pages/course_logic/logic.php
+
+// В начале файла
+$startTime = microtime(true);
+
+// Подключение функций кэширования
+require_once 'cache_functions.php';
+require_once("database/dbconnect.php");
+
+// Флаг для отслеживания загрузки из кэша
+$isLoadedFromCache = true;
+
+// Проверяем кэш для разделов
+$sectionsCacheKey = 'sections_data';
+$sections = getCache($sectionsCacheKey);
+
+if (!$sections) {
+    $isLoadedFromCache = false;
+    // Запрос для получения всех разделов
+    $sectionsQuery = "SELECT id, title_section FROM section ORDER BY id ASC";
+    $sectionsResult = $dbcon->query($sectionsQuery);
+
+    if ($sectionsResult === false) {
+        die("Ошибка при получении разделов: " . $dbcon->error);
+    }
+
+    $sections = $sectionsResult->fetch_all(MYSQLI_ASSOC);
+    setCache($sectionsCacheKey, $sections);
+} 
+
+// Проверяем кэш для лекций
+$lecturesCacheKey = 'lectures_data';
+$lectures = getCache($lecturesCacheKey);
+
+if (!$lectures) {
+    $isLoadedFromCache = false;
+    // Запрос для получения всех лекций
+    $lecturesQuery = "SELECT id, id_section, title_lecture, order_lecture FROM lecture ORDER BY id_section ASC, order_lecture ASC";
+    $lecturesResult = $dbcon->query($lecturesQuery);
+
+    if ($lecturesResult === false) {
+        die("Ошибка при получении лекций: " . $dbcon->error);
+    }
+
+    $lectures = $lecturesResult->fetch_all(MYSQLI_ASSOC);
+    setCache($lecturesCacheKey, $lectures);
+} 
+
+// Группируем лекции по разделам
+$lecturesBySection = [];
+foreach ($lectures as $lecture) {
+    $lecturesBySection[$lecture['id_section']][] = $lecture;
+}
+
+// Создаем общий массив всех лекций
+$allLectures = [];
+foreach ($lecturesBySection as $sectionLectures) {
+    foreach ($sectionLectures as $lecture) {
+        $allLectures[] = $lecture;
+    }
+}
+
+if (empty($lecturesBySection)) {
+    die("Нет доступных лекций.");
+}
+
+// Сортируем все лекции по order_lecture
+usort($allLectures, function ($a, $b) {
+    return $a['order_lecture'] - $b['order_lecture'];
+});
+
+// Проверяем авторизацию пользователя
+$isAuthorized = isset($_SESSION['authorization_dostup']) && $_SESSION['authorization_dostup'] === true;
+
+// В конце файла
+$endTime = microtime(true);
+
+// работаем с тестами!!!!!!!
+
+// Функция для получения тестов и вопросов, но снчала проверяется есть ли кэш этих тестов
+function getTestQuestions($lectureId, $dbcon)
+{
+    $cacheKey = 'test_questions_lecture_' . $lectureId;
+
+    // Проверяем кэш
+    if ($cachedData = getCache($cacheKey)) {
+        return $cachedData;
+    }
+
+    // Получаем test_id  для лекции
+    $testQuery = "SELECT test_id  FROM lecture WHERE id = ?";
+    $stmt = $dbcon->prepare($testQuery);
+    if (!$stmt) {
+        die("Ошибка подготовки запроса: " . $dbcon->error);
+    }
+    $stmt->bind_param("i", $lectureId);
+    if (!$stmt->execute()) {
+        die("Ошибка выполнения запроса: " . $stmt->error);
+    }
+    $result = $stmt->get_result();
+
+    if ($result->num_rows === 0) {
+        return null; // Нет теста для этой лекции
+    }
+
+    $testData = $result->fetch_assoc();
+    $testId = $testData['test_id'];
+
+    // Получаем вопросы для теста
+    $questionsQuery = "
+        SELECT id, title_questions, correct_option, wrong_answer1, wrong_answer2, wrong_answer3 
+        FROM questions 
+        WHERE id_test = ?
+    ";
+    $stmt = $dbcon->prepare($questionsQuery);
+    if (!$stmt) {
+        die("Ошибка подготовки запроса: " . $dbcon->error);
+    }
+    $stmt->bind_param("i", $testId);
+    if (!$stmt->execute()) {
+        die("Ошибка выполнения запроса: " . $stmt->error);
+    }
+    $questionsResult = $stmt->get_result();
+
+    $questions = [];
+    while ($row = $questionsResult->fetch_assoc()) {
+        $options = [
+            $row['correct_option'],
+            $row['wrong_answer1'],
+            $row['wrong_answer2'],
+            $row['wrong_answer3']
+        ];
+        shuffle($options);
+
+        $questions[] = [
+            'id' => $row['id'],
+            'title' => $row['title_questions'],
+            'options' => $options,
+        ];
+    }
+
+    // Сохраняем тесты в кэш
+    setCache($cacheKey, $questions);
+
+    return $questions;
+}
+// Добавляем тесты к каждой лекции
+foreach ($allLectures as &$lecture) {
+    $lecture['test_questions'] = getTestQuestions($lecture['id'], $dbcon);
+}
+
+if (empty($allLectures)) {
+    die("Ошибка при создании массива всех лекций.");
+}
+
+// Проверяем авторизацию пользователя
+$isAuthorized = isset($_SESSION['authorization_dostup']) && $_SESSION['authorization_dostup'] === true;
+
+// В конце файла
+$endTime = microtime(true);
+<?php
+// diplom_project\actions/action_course-getLecture.php
+require_once("../database/dbconnect.php");
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
+    $lectureId = intval($_GET['id']); // Защита от SQL-инъекций
+
+    // Запрос для получения текста лекции
+    $query = "SELECT lecture_text FROM lecture WHERE id = ?";
+    $stmt = $dbcon->prepare($query);
+    if (!$stmt) {
+        echo json_encode(['success' => false, 'message' => 'Ошибка подготовки запроса']);
+        exit;
+    }
+
+    $stmt->bind_param("i", $lectureId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $lecture = $result->fetch_assoc();
+        echo json_encode(['success' => true, 'text' => $lecture['lecture_text']]);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Лекция не найдена']);
+    }
+} else {
+    echo json_encode(['success' => false, 'message' => 'Неверный запрос']);
+}
+?>
+<?php
+// diplom_project\actions/action_course-getTest.php
+session_start();
+require_once("../database/dbconnect.php");
+
+header('Content-Type: application/json');
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    echo json_encode(['success' => false, 'message' => 'Неверный метод запроса']);
+    exit;
+}
+
+$correctAnswers = [];
+$selectedAnswers = [];
+$totalQuestions = 0;
+$correctCount = 0;
+
+// Фильтруем только вопросы
+foreach ($_POST as $key => $value) {
+    if (strpos($key, 'question_') === 0) {
+        $totalQuestions++;
+        $questionId = substr($key, strlen('question_'));
+        $query = "SELECT correct_option FROM questions WHERE id = ?";
+        $stmt = $dbcon->prepare($query);
+        $stmt->bind_param("i", $questionId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $correctAnswers[$questionId] = $row['correct_option'];
+        $selectedAnswers[$questionId] = $value;
+
+        if ($value === $row['correct_option']) {
+            $correctCount++;
+        }
+    }
+}
+
+// Вычисляем процент правильных ответов
+$correctPercentage = ($totalQuestions > 0) ? ($correctCount / $totalQuestions) * 100 : 0;
+
+// Проверяем, все ли ответы верны
+$isAllCorrect = ($correctCount === $totalQuestions);
+
+echo json_encode([
+    'success' => $isAllCorrect,
+    'correctPercentage' => $correctPercentage,
+    'message' => $isAllCorrect ? 'Все ответы верны!' : 'Некоторые ответы неверны.'
+]);
+-- phpMyAdmin SQL Dump
+-- version 5.2.0
+-- https://www.phpmyadmin.net/
+--
+-- Хост: 127.0.0.1:3306
+-- Время создания: Май 28 2025 г., 22:42
+-- Версия сервера: 8.0.30
+-- Версия PHP: 7.2.34
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- База данных: `diplom`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `completed_lecture`
+--
+
+CREATE TABLE `completed_lecture` (
+  `id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `lecture_id` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `completed_test`
+--
+
+CREATE TABLE `completed_test` (
+  `id` int NOT NULL,
+  `id_student` int NOT NULL,
+  `id_test` int NOT NULL,
+  `assessment` int NOT NULL,
+  `try` int NOT NULL DEFAULT '0',
+  `date` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Дамп данных таблицы `completed_test`
+--
+
+INSERT INTO `completed_test` (`id`, `id_student`, `id_test`, `assessment`, `try`, `date`) VALUES
+(1, 2, 2, 5, 1, '2025-05-28');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `lecture`
+--
+
+CREATE TABLE `lecture` (
+  `id` int NOT NULL,
+  `id_section` int NOT NULL,
+  `title_lecture` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `lecture_text` text NOT NULL,
+  `order_lecture` int NOT NULL,
+  `test_id` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Дамп данных таблицы `lecture`
+--
+
+INSERT INTO `lecture` (`id`, `id_section`, `title_lecture`, `lecture_text`, `order_lecture`, `test_id`) VALUES
+(1, 1, 'Технические средства информатизации (ТСИ)', '<!-- Заголовок -->\r\n<h1 class=\"lectures__items-h1\">Технические средства информатизации (ТСИ)</h1>, 10, 2);
+
+-- Структура таблицы `questions`
+--
+
+CREATE TABLE `questions` (
+  `id` int NOT NULL,
+  `id_test` int NOT NULL,
+  `title_questions` text NOT NULL,
+  `correct_option` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `wrong_answer1` text NOT NULL,
+  `wrong_answer2` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `wrong_answer3` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+-- Дамп данных таблицы `questions`
+INSERT INTO `questions` (`id`, `id_test`, `title_questions`, `correct_option`, `wrong_answer1`, `wrong_answer2`, `wrong_answer3`) VALUES
+(1, 2, 'Что такое ТСИ?', 'Совокупность компьютерной техники, периферийных устройств и коммуникационной техники', 'Технические средства информатизации, включающие только компьютерную технику  ', 'Программное обеспечение для обработки информации  ', 'Средства накопления информации на машиночитаемых носителях  ');
+
+-- Структура таблицы `section`
+CREATE TABLE `section` (
+  `id` int NOT NULL,
+  `title_section` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+-- Дамп данных таблицы `section`
+INSERT INTO `section` (`id`, `title_section`) VALUES
+(1, 'Технические средства информатизации (ТСИ) '),
+(2, 'Системный блок'),
+(3, 'Дополнительные устройства системного блока'),
+(4, 'Устройства вывода информации'),
+(5, 'Устройства ввода информации'),
+(6, 'Средства телекоммуникации'),
+(7, 'Устройства для работы с информацией на твердых носителях');
+-- Структура таблицы `test`
+CREATE TABLE `test` (
+  `id` int NOT NULL,
+  `title_test` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Дамп данных таблицы `test`
+INSERT INTO `test` (`id`, `title_test`) VALUES
+(1, ''),
+(2, 'Технические средства информатизации (ТСИ)'),
+(3, 'Материнские платы'),
+(4, 'Микропроцессоры');
+-- Структура таблицы `users`
+CREATE TABLE `users` (
+  `id` int NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `surname` varchar(50) NOT NULL,
+  `group_st` varchar(3) NOT NULL,
+  `password` varchar(8) NOT NULL,
+  `progress` int DEFAULT '0',
+  `points` int DEFAULT '0',
+  `role` varchar(5) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Дамп данных таблицы `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `surname`, `group_st`, `password`, `progress`, `points`, `role`) VALUES
+(1, 'Анастасия', 'Горкавчук', 'П21', '11qq22w', 0, 0, 'user'),
+(2, 'Ангелина', 'Пухненкова', 'П21', '1234йцук', 0, 0, 'user'),
+
+--
+-- Индексы сохранённых таблиц
+--
+
+--
+-- Индексы таблицы `completed_lecture`
+--
+ALTER TABLE `completed_lecture`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `lecture_id` (`lecture_id`);
+
+--
+-- Индексы таблицы `completed_test`
+--
+ALTER TABLE `completed_test`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `completed_test_fk1` (`id_student`),
+  ADD KEY `completed_test_fk2` (`id_test`);
+
+--
+-- Индексы таблицы `lecture`
+--
+ALTER TABLE `lecture`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `lecture_fk1` (`id_section`),
+  ADD KEY `lecture_fk2` (`test_id`);
+
+--
+-- Индексы таблицы `questions`
+--
+ALTER TABLE `questions`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `questions_fk1` (`id_test`);
+
+--
+-- Индексы таблицы `section`
+--
+ALTER TABLE `section`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id` (`id`);
+
+--
+-- Индексы таблицы `test`
+--
+ALTER TABLE `test`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id` (`id`);
+
+--
+-- Индексы таблицы `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id` (`id`);
+
+--
+-- AUTO_INCREMENT для сохранённых таблиц
+--
+
+--
+-- AUTO_INCREMENT для таблицы `completed_lecture`
+--
+ALTER TABLE `completed_lecture`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT для таблицы `completed_test`
+--
+ALTER TABLE `completed_test`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT для таблицы `lecture`
+--
+ALTER TABLE `lecture`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+
+--
+-- AUTO_INCREMENT для таблицы `questions`
+--
+ALTER TABLE `questions`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT для таблицы `section`
+--
+ALTER TABLE `section`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT для таблицы `test`
+--
+ALTER TABLE `test`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT для таблицы `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- Ограничения внешнего ключа сохраненных таблиц
+--
+
+--
+-- Ограничения внешнего ключа таблицы `completed_lecture`
+--
+ALTER TABLE `completed_lecture`
+  ADD CONSTRAINT `completed_lecture_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `completed_lecture_ibfk_2` FOREIGN KEY (`lecture_id`) REFERENCES `lecture` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
+-- Ограничения внешнего ключа таблицы `completed_test`
+--
+ALTER TABLE `completed_test`
+  ADD CONSTRAINT `completed_test_fk1` FOREIGN KEY (`id_student`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `completed_test_fk2` FOREIGN KEY (`id_test`) REFERENCES `test` (`id`);
+
+--
+-- Ограничения внешнего ключа таблицы `lecture`
+--
+ALTER TABLE `lecture`
+  ADD CONSTRAINT `lecture_fk1` FOREIGN KEY (`id_section`) REFERENCES `section` (`id`),
+  ADD CONSTRAINT `lecture_fk2` FOREIGN KEY (`test_id`) REFERENCES `test` (`id`);
+
+--
+-- Ограничения внешнего ключа таблицы `questions`
+--
+ALTER TABLE `questions`
+  ADD CONSTRAINT `questions_fk1` FOREIGN KEY (`id_test`) REFERENCES `test` (`id`);
+COMMIT;
