@@ -58,16 +58,28 @@ require_once 'course_logic/logic.php';
                     <button class="course__take-test" data-lecture-id="<?php echo $lecture['id']; ?>" style="display: none;">Пройти тест</button>
                     <button class="course__next-lecture" data-lecture-id="<?php echo $lecture['id']; ?>">Следующая лекция</button>
                 </div>
-                <hr class="separator">
                 <!-- блок теста -->
                 <div class="test-block" data-lecture-id="<?php echo $lecture['id']; ?>" style="display: none; margin-top: 20px;">
+                    <h3 class="test-attempt-info">
+                        У вас есть всего 3 попытки пройти тест. Будьте очень внимательны.
+                    </h3>
+                    <hr class="separator">
+                    <p class="test-attempts-left">
+                        У вас есть еще <span class="attempts-count">N</span> попыток
+                    </p>
+                    <p class="no-attempts-message" style="color: red; display: none;">
+                        Упс! У вас не осталось попыток.
+                    </p>
+                    <hr class="separator">
                     <?php if (!empty($lecture['test_questions'])): ?>
-                        <h3>Тест по теме <?php echo htmlspecialchars($lecture['title_lecture']); ?></h3>
+
                         <div class="test-loading-indicator" style="display: none;">
                             <div class="spinner"></div>
                             <p>Загрузка теста...</p>
                         </div>
                         <form class="test-form" data-lecture-id="<?php echo $lecture['id']; ?>">
+                            <h3>Тест по теме <?php echo htmlspecialchars($lecture['title_lecture']); ?></h3>
+                            <input type="hidden" name="lecture_id" value="<?php echo $lecture['id']; ?>">
                             <?php foreach ($lecture['test_questions'] as $question): ?>
                                 <div class="question-block">
                                     <h3 class="question-title">Вопрос: <?php echo htmlspecialchars($question['title']); ?></h3>

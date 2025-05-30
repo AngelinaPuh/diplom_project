@@ -155,31 +155,36 @@ document.addEventListener("DOMContentLoaded", () => {
   // Обработчик кнопок "Пройти тест"
   document.querySelectorAll(".course__take-test").forEach((button) => {
     button.addEventListener("click", function () {
-      const lectureId = this.dataset.lectureId;
-      const testBlock = document.querySelector(`.test-block[data-lecture-id="${lectureId}"]`);
-      if (testBlock) {
-        testBlock.style.display = "block";
-      }
-    });
-  });
+        const lectureId = this.dataset.lectureId;
+        const lectureBlock = document.querySelector(`.cours__lecture#lecture-${lectureId}`);
+        const testBlock = lectureBlock.querySelector(`.test-block[data-lecture-id="${lectureId}"]`);
 
-  // Обработка отправки теста — кнопка с типом "button", поэтому слушаем клик на кнопке "Отправить тест"
-  document.querySelectorAll(".test-form").forEach((form) => {
-    // В твоём HTML кнопка отправки — type="button", а не submit, поэтому нужно слушать клик именно на ней
-    const submitButton = form.querySelector(".submit-test");
-    if (submitButton) {
-      submitButton.addEventListener("click", () => {
-        // Собираем ответы
-        const formData = new FormData(form);
-        // Пример: вывод всех ответов в консоль
-        for (const [name, value] of formData.entries()) {
-          console.log(`Ответ на ${name}: ${value}`);
+        if (testBlock) {
+            // Очищаем предыдущие ответы
+            const form = testBlock.querySelector(".test-form");
+            if (form) {
+                const radioButtons = form.querySelectorAll('input[type="radio"]');
+                radioButtons.forEach(radio => { radio.checked = false; });
+            }
+
+            // Скрываем результаты
+            const resultsBlock = testBlock.querySelector(".test-results");
+            if (resultsBlock) {
+                resultsBlock.style.display = "none";
+                resultsBlock.querySelector(".result-message").textContent = "";
+                resultsBlock.querySelector(".grade-number").textContent = "";
+            }
+
+            // Загружаем информацию о попытках
+            loadTestAttempts(lectureId, testBlock);
+
+            // Показываем тест
+            lectureBlock.querySelector("article").style.display = "none";
+            lectureBlock.querySelector(".course__footer").style.display = "none";
+            // testBlock.style.display = "block";
         }
-        alert("Тест успешно отправлен!");
-        // Здесь можно добавить отправку данных на сервер через fetch/AJAX
-      });
-    }
-  });
+    });
+});
 });
 
 // обработка кнопок ПРОЙТИ ТЕСТ
@@ -347,134 +352,193 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+function showTestResults(form, data) {
+    const resultsBlock = form.nextElementSibling; // Блок с результатами
+    if (!resultsBlock || !resultsBlock.classList.contains("test-results")) return;
+
+    const resultMessage = resultsBlock.querySelector(".result-message");
+    const gradeNumber = resultsBlock.querySelector(".grade-number");
+
+    resultsBlock.style.display = "block";
+
+    if (data.success) {
+        resultMessage.textContent = "Тест успешно пройден!";
+    } else {
+        resultMessage.textContent = "Некоторые ответы неверны.";
+    }
+
+    gradeNumber.textContent = data.grade;
+    gradeNumber.style.fontSize = "100px";
+    gradeNumber.style.fontWeight = "bold";
+
+    let color = "green";
+    if (data.grade == 4) color = "blue";
+    else if (data.grade == 3) color = "#cbcb00";
+    else if (data.grade == 2) color = "red";
+
+    gradeNumber.style.color = color;
+}
+
+// Функция обновления количества попыток и скрывает всю форму (вопросы и кнопку)
+function updateAttemptsDisplay(lectureId, attemptsLeft) {
+    const testBlock = document.querySelector(`.test-block[data-lecture-id="${lectureId}"]`);
+    if (!testBlock) return;
+
+    const testForm = testBlock.querySelector(".test-form");
+    const noAttemptsMessage = testBlock.querySelector(".no-attempts-message") || (() => {
+        const el = document.createElement("p");
+        el.className = "no-attempts-message";
+        el.style.color = "red";
+        el.style.display = "none";
+        el.textContent = "Упс! У вас не осталось попыток.";
+        testBlock.appendChild(el);
+        return el;
+    })();
+
+    const takeTestButton = document.querySelector(`.course__take-test[data-lecture-id="${lectureId}"]`);
+
+    if (attemptsLeft <= 0) {
+        // Скрываем форму с тестом
+        if (testForm) testForm.style.display = "none";
+
+        // Показываем сообщение
+        noAttemptsMessage.style.display = "block";
+
+        // Скрываем кнопку
+        if (takeTestButton) takeTestButton.style.display = "none";
+    } else {
+        // Если есть попытки — показываем форму и скрываем сообщение
+        noAttemptsMessage.style.display = "none";
+        if (testForm) testForm.style.display = "block";
+        if (takeTestButton) takeTestButton.style.display = "inline-block";
+    }
+
+    // Обновляем счётчик попыток
+    const attemptsSpan = testBlock.querySelector(".attempts-count");
+    if (attemptsSpan) attemptsSpan.textContent = attemptsLeft;
+
+    const attemptsMessage = testBlock.querySelector(".test-attempts-left");
+    if (attemptsMessage) {
+        attemptsMessage.style.color = attemptsLeft > 0 ? "green" : "red";
+    }
+}
 //обработчик отправки ответов из ТЕСТа на сервер через AJAX.
-document.addEventListener("DOMContentLoaded", function () {
-  // Обработка клика по кнопке "Отправить тест"
-  document.body.addEventListener("click", function (e) {
+document.body.addEventListener("click", function (e) {
     if (e.target.classList.contains("submit-test")) {
-      const form = e.target.closest(".test-form");
-      if (!form) return;
+        const form = e.target.closest(".test-form");
+        if (!form) return;
 
-      // Находим индикатор загрузки
-      const loadingIndicator = form.querySelector(".test-loading-indicator");
+        const loadingIndicator = form.querySelector(".test-loading-indicator");
 
-      // Проверяем, что все вопросы отвечены
-      const questions = form.querySelectorAll(".question-block");
-      let allAnswered = true;
+        // Проверяем, что все вопросы отвечены
+        const questions = form.querySelectorAll(".question-block");
+        let allAnswered = true;
+        questions.forEach((questionBlock) => {
+            const radioButtons = questionBlock.querySelectorAll('input[type="radio"]');
+            const isChecked = Array.from(radioButtons).some(radio => radio.checked);
+            if (!isChecked) allAnswered = false;
+        });
 
-      questions.forEach((questionBlock) => {
-        const radioButtons = questionBlock.querySelectorAll(
-          'input[type="radio"]'
-        );
-        const isChecked = Array.from(radioButtons).some(
-          (radio) => radio.checked
-        );
-        if (!isChecked) {
-          allAnswered = false;
+        if (!allAnswered) {
+            alert("Пожалуйста, ответьте на все вопросы перед отправкой теста.");
+            return;
         }
-      });
 
-      if (!allAnswered) {
-        alert("Пожалуйста, ответьте на все вопросы перед отправкой теста.");
-        return; // Прерываем выполнение, если не все вопросы отвечены
-      }
+        loadingIndicator.style.display = "block";
 
-      // Показываем индикатор загрузки
-      loadingIndicator.style.display = "block";
+        // Получаем ID лекции
+        const lectureIdInput = form.querySelector("[name='lecture_id']");
+        const lectureId = lectureIdInput ? lectureIdInput.value : form.dataset.lectureId;
 
-      // Если все вопросы отвечены, отправляем данные на сервер
-      const formData = new FormData(form);
-      const resultsBlock = form.nextElementSibling; // Блок для вывода результатов
+        // Собираем данные формы
+        const formData = new FormData(form);
+        formData.append("lecture_id", lectureId);
 
-      fetch("actions/action_course-getTest.php", {
-        method: "POST",
-        body: formData,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          // Скрываем индикатор загрузки
-          loadingIndicator.style.display = "none";
-
-          // Показываем блок с результатами
-          resultsBlock.style.display = "block";
-
-          // Выводим сообщение о результатах
-          const resultMessage = resultsBlock.querySelector(".result-message");
-          const gradeNumber = resultsBlock.querySelector(".grade-number");
-
-          if (data.success) {
-            resultMessage.textContent = "Тест пройден успешно!";
-          } else {
-            resultMessage.textContent = "Некоторые ответы неверны.";
-          }
-
-          // Выводим оценку
-          const correctPercentage = data.correctPercentage;
-          let grade = "";
-          let color = "";
-          if (correctPercentage === 100) {
-            grade = "5";
-            color = "green";
-          } else if (correctPercentage >= 75) {
-            grade = "4";
-            color = "blue";
-          } else if (correctPercentage >= 50) {
-            grade = "3";
-            color = "#cbcb00";
-          } else {
-            grade = "2";
-            color = "red";
-          }
-          // Отображаем оценку с цветом
-          gradeNumber.textContent = grade;
-          gradeNumber.style.fontSize = "100px";
-          gradeNumber.style.color = color;
-          gradeNumber.style.fontWeight = "bold";
+        fetch("actions/action_course-getTest.php", {
+            method: "POST",
+            body: formData
         })
-        .catch((error) => {
-          console.error("Ошибка:", error);
+        .then(response => response.json())
+        .then(data => {
+            loadingIndicator.style.display = "none";
 
-          // Скрываем индикатор загрузки в случае ошибки
-          loadingIndicator.style.display = "none";
+            if (data.success) {
+                alert(`Тест успешно отправлен! Ваша оценка: ${data.grade}`);
+                updateAttemptsDisplay(lectureId, data.attemptsLeft);
+                showTestResults(form, data);
+            } else {
+                alert(data.message || "Ошибка при отправке теста");
+            }
+        })
+        .catch(error => {
+            loadingIndicator.style.display = "none";
+            console.error("Ошибка сети:", error);
+            alert("Произошла ошибка при отправке теста.");
         });
     }
-  });
 });
-
-// управление индикатором загрузки для тестов
+function loadTestAttempts(lectureId, testBlock) {
+    fetch(`actions/action_get_attempts.php?lecture_id=${lectureId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                updateAttemptsDisplay(lectureId, data.attemptsLeft);
+            } else {
+                console.error("Ошибка загрузки попыток:", data.message);
+            }
+        })
+        .catch(err => console.error("Ошибка сети:", err))
+        .finally(() => {
+            // Скрываем индикатор загрузки после получения данных
+            const loadingIndicator = testBlock.querySelector(".test-loading-indicator");
+            if (loadingIndicator) loadingIndicator.style.display = "none";
+        });
+}
 document.querySelectorAll(".course__take-test").forEach((button) => {
-  button.addEventListener("click", function () {
-    const lectureId = this.getAttribute("data-lecture-id");
-    // Ищем блок теста с таким же data-lecture-id
-    const testBlock = document.querySelector(
-      `.test-block[data-lecture-id="${lectureId}"]`
-    );
+    button.addEventListener("click", function () {
+        const lectureId = this.dataset.lectureId;
+        const lectureBlock = document.querySelector(`.cours__lecture#lecture-${lectureId}`);
+        const testBlock = lectureBlock?.querySelector(`.test-block[data-lecture-id="${lectureId}"]`);
 
-    if (!testBlock) {
-      console.error(`Блок теста с data-lecture-id="${lectureId}" не найден`);
-      return;
-    }
+        if (!testBlock) {
+            console.error(`Блок теста для лекции ${lectureId} не найден`);
+            return;
+        }
 
-    const loadingIndicator = testBlock.querySelector(".test-loading-indicator");
-    const testForm = testBlock.querySelector(".test-form");
+        // Находим нужные элементы
+        const form = testBlock.querySelector(".test-form");
+        const resultsBlock = testBlock.querySelector(".test-results");
+        const loadingIndicator = testBlock.querySelector(".test-loading-indicator");
+        const noAttemptsMessage = testBlock.querySelector(".no-attempts-message");
 
-    if (!loadingIndicator || !testForm) {
-      console.error(
-        "Не найдены элементы .test-loading-indicator или .test-form внутри .test-block"
-      );
-      return;
-    }
+        // Очищаем предыдущие ответы
+        if (form) {
+            const radioButtons = form.querySelectorAll('input[type="radio"]');
+            radioButtons.forEach(radio => { radio.checked = false; });
+        }
 
-    // Показываем индикатор загрузки
-    loadingIndicator.style.display = "block";
-    testForm.style.display = "none";
+        // Скрываем результаты
+        if (resultsBlock) {
+            resultsBlock.style.display = "none";
+            const resultMessage = resultsBlock.querySelector(".result-message");
+            const gradeNumber = resultsBlock.querySelector(".grade-number");
+            if (resultMessage) resultMessage.textContent = "";
+            if (gradeNumber) gradeNumber.textContent = "";
+        }
 
-    // Имитация асинхронной загрузки теста (замените на реальный AJAX-запрос)
-    setTimeout(() => {
-      loadingIndicator.style.display = "none";
-      testForm.style.display = "block";
-    }, 1000);
-  });
+        // Показываем индикатор загрузки
+        if (loadingIndicator) loadingIndicator.style.display = "block";
+
+        // Скрываем форму с тестом и сообщение об отсутствии попыток
+        if (form) form.style.display = "none";
+        if (noAttemptsMessage) noAttemptsMessage.style.display = "none";
+
+        // Показываем блок теста (если был скрыт)
+        testBlock.style.display = "block";
+
+        // Загружаем информацию о попытках
+        loadTestAttempts(lectureId, testBlock);
+    });
 });
 // управление индикатором загрузки для лекции
 document.querySelectorAll(".course__next-lecture").forEach((button) => {

@@ -343,3 +343,17 @@
     transform: rotate(360deg);
   }
 }
+/* стили для подсветки */
+.test-attempts-left {
+    font-weight: bold;
+    margin-top: 10px;
+}
+.test-attempts-left span {
+    font-size: 18px;
+    font-weight: bold;
+}
+.no-attempts-message {
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;
+}
