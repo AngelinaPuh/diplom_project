@@ -72,12 +72,13 @@ require_once 'course_logic/logic.php';
                     </p>
                     <hr class="separator">
                     <?php if (!empty($lecture['test_questions'])): ?>
-                        <h3>Тест по теме <?php echo htmlspecialchars($lecture['title_lecture']); ?></h3>
+
                         <div class="test-loading-indicator" style="display: none;">
                             <div class="spinner"></div>
                             <p>Загрузка теста...</p>
                         </div>
                         <form class="test-form" data-lecture-id="<?php echo $lecture['id']; ?>">
+                            <h3>Тест по теме <?php echo htmlspecialchars($lecture['title_lecture']); ?></h3>
                             <input type="hidden" name="lecture_id" value="<?php echo $lecture['id']; ?>">
                             <?php foreach ($lecture['test_questions'] as $question): ?>
                                 <div class="question-block">
@@ -503,37 +504,46 @@ function showTestResults(form, data) {
     gradeNumber.style.color = color;
 }
 
-// Функция обновления количества попыток
+// Функция обновления количества попыток и скрывает всю форму (вопросы и кнопку)
 function updateAttemptsDisplay(lectureId, attemptsLeft) {
     const testBlock = document.querySelector(`.test-block[data-lecture-id="${lectureId}"]`);
     if (!testBlock) return;
 
-    const attemptsSpan = testBlock.querySelector(".attempts-count");
-    const attemptsMessage = testBlock.querySelector(".test-attempts-left");
+    const submitTestButton = testBlock.querySelector(".submit-test");
+    const noAttemptsMessage = testBlock.querySelector(".no-attempts-message") || (() => {
+        const el = document.createElement("p");
+        el.className = "no-attempts-message";
+        el.style.color = "red";
+        el.style.display = "none";
+        el.textContent = "Упс! У вас не осталось попыток.";
+        testBlock.appendChild(el);
+        return el;
+    })();
 
-    if (attemptsSpan) {
-        attemptsSpan.textContent = attemptsLeft;
-    }
-
-    if (attemptsMessage) {
-        attemptsMessage.style.color = attemptsLeft > 0 ? "inherit" : "red";
-    }
-
-    const takeTestButton = testBlock.closest(".cours__lecture")?.querySelector(`.course__take-test[data-lecture-id="${lectureId}"]`);
-
-    if (attemptsLeft <= 0 && takeTestButton) {
-        takeTestButton.style.display = "none";
-
-        let noAttemptsText = testBlock.querySelector(".no-attempts-message");
-        if (!noAttemptsText) {
-            noAttemptsText = document.createElement("p");
-            noAttemptsText.className = "no-attempts-message";
-            noAttemptsText.style.color = "red";
-            noAttemptsText.textContent = "Упс! У вас не осталось попыток.";
-            testBlock.appendChild(noAttemptsText);
-        } else {
-            noAttemptsText.style.display = "block";
+    if (attemptsLeft <= 0) {
+        // Скрываем кнопку отправки теста
+        if (submitTestButton) {
+            submitTestButton.style.display = "none";
         }
+
+        // Показываем сообщение о том, что попыток больше нет
+        noAttemptsMessage.style.display = "block";
+
+    } else {
+        // Если есть попытки — показываем кнопку и скрываем сообщение
+        if (submitTestButton) {
+            submitTestButton.style.display = "inline-block";
+        }
+        noAttemptsMessage.style.display = "none";
+    }
+
+    // Обновляем счётчик попыток
+    const attemptsSpan = testBlock.querySelector(".attempts-count");
+    if (attemptsSpan) attemptsSpan.textContent = attemptsLeft;
+
+    const attemptsMessage = testBlock.querySelector(".test-attempts-left");
+    if (attemptsMessage) {
+        attemptsMessage.style.color = attemptsLeft > 0 ? "green" : "red";
     }
 }
 //обработчик отправки ответов из ТЕСТа на сервер через AJAX.

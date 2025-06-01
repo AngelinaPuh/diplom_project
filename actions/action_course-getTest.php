@@ -102,7 +102,7 @@ if ($stmtTry->num_rows > 0) {
     $newTry = 1;
 
     $stmtInsert = $dbcon->prepare("INSERT INTO completed_test (id_student, id_test, assessment, try, date_completed) VALUES (?, ?, ?, ?, ?)");
-    $stmtInsert->bind_param("iiiii", $userId, $testId, $grade, $newTry, $date);
+    $stmtInsert->bind_param("iiiis", $userId, $testId, $grade, $newTry, $date);
     $stmtInsert->execute();
 }
 
