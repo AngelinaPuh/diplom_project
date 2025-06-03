@@ -72,6 +72,10 @@ document.addEventListener("DOMContentLoaded", function () {
         e.preventDefault();
 
         const formData = new FormData(authForm);
+        // Отладка: выведем содержимое formData
+        for (let [key, value] of formData.entries()) {
+            console.log(key, value);
+        }
         fetch('actions/action_authorization.php', {
             method: 'POST',
             body: formData
@@ -82,7 +86,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Успешная авторизация
                     alert('Авторизация пройдена успешно!');
                     closeModal();
-                    location.reload(); // Перезагрузка страницы для обновления состояния
+                    window.location.href = '/diplom_project/index.php?page=course'; // или любая другая защищённая страница
+                   // // location.reload(); // Перезагрузка страницы для обновления состояния
                 } else {
                     // Ошибка авторизации
                     messageElement_a.textContent = data.message;
@@ -93,6 +98,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 messageElement_a.textContent = 'Произошла ошибка при отправке запроса.';
             });
     });
+    console.log("authForm:", authForm);
     // Функция закрытия модального окна
     function closeModal() {
         const authModal = document.getElementById('authModal');

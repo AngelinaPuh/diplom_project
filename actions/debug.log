@@ -1,0 +1,72 @@
+Script started at 2025-06-03 13:20:02
+POST data: Array
+(
+    [surname] => Пухненкова
+    [password] => 1234йцук
+)
+
+Script started at 2025-06-03 13:21:07
+POST data: Array
+(
+)
+
+Script started at 2025-06-03 13:23:03
+POST data: Array
+(
+    [surname] => Пухненкова
+    [password] => 1234йцук
+)
+
+Script started at 2025-06-03 13:24:03
+POST data: Array
+(
+    [surname] => Пухненкова
+    [password] => 1234йцук
+)
+
+Script started at 2025-06-03 13:24:15
+Script started at 2025-06-03 13:25:53
+POST data: Array
+(
+    [surname] => Пухненкова
+    [password] => 1234йцук
+)
+
+Script started at 2025-06-03 13:27:30
+POST data: Array
+(
+    [surname] => Пухненкова
+    [password] => 1234йцук
+)
+
+Script started at 2025-06-03 13:29:04
+Script started at 2025-06-03 13:31:08
+Script started at 2025-06-03 13:31:57
+Script started at 2025-06-03 13:33:07
+POST data: Array
+(
+    [surname] => ваыва
+    [name] => ыва
+    [group] => ыва
+    [password] => 123456789
+    [password_check] => 123456789
+)
+
+Script started at 2025-06-03 13:33:14
+Script started at 2025-06-03 13:34:22
+POST data: Array
+(
+    [surname] => йцу
+    [name] => йцу
+    [group] => йцу
+    [password] => 111111
+    [password_check] => 111111
+)
+
+Script started at 2025-06-03 13:34:54
+POST data: Array
+(
+    [surname] => Пухненкова
+    [password] => 1234йцук
+)
+

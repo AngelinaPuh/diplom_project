@@ -1,12 +1,23 @@
 <?php
 session_start();
 require_once("../database/dbconnect.php");
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/php_error.log');
+error_reporting(E_ALL);
+// Для отладки: выведем тип контента
+header('Content-Type: application/json');
+
+// Логируем начало работы
+file_put_contents('debug.log', 'Script started at ' . date('Y-m-d H:i:s') . "\n", FILE_APPEND);
 
 // Проверяем метод запроса
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['success' => false, 'message' => 'Неверный метод запроса']);
     exit;
 }
+
+file_put_contents('debug.log', 'POST data: ' . print_r($_POST, true) . "\n", FILE_APPEND);
 
 // Проверяем наличие параметров
 if (!isset($_POST['surname']) || !isset($_POST['password'])) {
@@ -52,7 +63,6 @@ if ($result && $result->num_rows > 0) {
     $_SESSION['surname'] = $mass['surname'];
     $_SESSION['group_st'] = $mass['group_st'];
     $_SESSION['progress'] = $mass['progress'];
-    $_SESSION['points'] = $mass['points'];
     $_SESSION['role'] = $mass['role'];
     $_SESSION['authorization_dostup'] = true;
 

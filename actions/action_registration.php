@@ -1,12 +1,23 @@
 <?php
 session_start();
-require_once('../database/dbconnect.php');
+require_once("../database/dbconnect.php");
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/php_error.log');
+error_reporting(E_ALL);
+// Для отладки: выведем тип контента
+header('Content-Type: application/json');
+
+// Логируем начало работы
+file_put_contents('debug.log', 'Script started at ' . date('Y-m-d H:i:s') . "\n", FILE_APPEND);
 
 // Проверяем метод запроса
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['success' => false, 'message' => 'Неверный метод запроса']);
     exit;
 }
+
+file_put_contents('debug.log', 'POST data: ' . print_r($_POST, true) . "\n", FILE_APPEND);
 
 // Проверяем наличие параметров
 if (
@@ -45,7 +56,7 @@ if ($result->num_rows > 0) {
 }
 
 // Добавляем нового пользователя в базу данных
-$insertUserQuery = "INSERT INTO users (surname, name, group_st, password, progress, points, role) VALUES (?, ?, ?, ?, 0, 0, 'user')";
+$insertUserQuery = "INSERT INTO users (surname, name, group_st, password, progress, role) VALUES (?, ?, ?, ?, 0, 'user')";
 $stmt = $dbcon->prepare($insertUserQuery);
 $stmt->bind_param('ssss', $surname, $name, $group, $password);
 

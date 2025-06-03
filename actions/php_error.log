@@ -1,0 +1,16 @@
+[03-Jun-2025 13:25:53 Europe/Moscow] PHP Warning:  Undefined array key "points" in B:\angelina\OSPanel\domains\localhost\diplom_project\actions\action_authorization.php on line 66
+[03-Jun-2025 13:29:04 Europe/Moscow] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'points' in 'field list' in B:\angelina\OSPanel\domains\localhost\diplom_project\actions\action_registration.php:58
+Stack trace:
+#0 B:\angelina\OSPanel\domains\localhost\diplom_project\actions\action_registration.php(58): mysqli->prepare()
+#1 {main}
+  thrown in B:\angelina\OSPanel\domains\localhost\diplom_project\actions\action_registration.php on line 58
+[03-Jun-2025 13:31:08 Europe/Moscow] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'points' in 'field list' in B:\angelina\OSPanel\domains\localhost\diplom_project\actions\action_registration.php:58
+Stack trace:
+#0 B:\angelina\OSPanel\domains\localhost\diplom_project\actions\action_registration.php(58): mysqli->prepare()
+#1 {main}
+  thrown in B:\angelina\OSPanel\domains\localhost\diplom_project\actions\action_registration.php on line 58
+[03-Jun-2025 13:33:07 Europe/Moscow] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'points' in 'field list' in B:\angelina\OSPanel\domains\localhost\diplom_project\actions\action_registration.php:60
+Stack trace:
+#0 B:\angelina\OSPanel\domains\localhost\diplom_project\actions\action_registration.php(60): mysqli->prepare()
+#1 {main}
+  thrown in B:\angelina\OSPanel\domains\localhost\diplom_project\actions\action_registration.php on line 60
