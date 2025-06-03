@@ -7,28 +7,20 @@ document.addEventListener("DOMContentLoaded", function () {
     dateOrder: "default",
   };
 
-  // Сохраняем оригинальные строки для восстановления
   let originalRows = [];
 
   function saveOriginalRows() {
     const rows = document.querySelectorAll("#resultsTable tbody tr");
-    originalRows = Array.from(rows).map((row) => {
-      // Клонируем каждую строку, чтобы сохранить исходное состояние
-      return row.cloneNode(true);
-    });
+    originalRows = Array.from(rows).map((row) => row.cloneNode(true));
   }
 
-  // === Функция фильтрации и сортировки ===
   function applyFilters() {
-    // Восстанавливаем оригинальные строки перед каждой фильтрацией
     const tbody = document.querySelector("#resultsTable tbody");
     tbody.innerHTML = "";
     originalRows.forEach((row) => tbody.appendChild(row));
 
-    // Получаем все строки заново
     let rows = Array.from(document.querySelectorAll("#resultsTable tbody tr"));
 
-    // Применяем фильтры
     let filteredRows = rows.filter((row) => {
       const rowGroup = row.getAttribute("data-group");
       const rowTest = row.cells[2].textContent.trim();
@@ -41,18 +33,18 @@ document.addEventListener("DOMContentLoaded", function () {
       );
     });
 
-    // Сортировка студентов (по алфавиту)
+    // ✅ Сортировка студентов (по алфавиту)
     if (filters.studentOrder !== "default") {
       filteredRows.sort((a, b) => {
         const nameA = a.cells[1].textContent.trim().toLowerCase();
         const nameB = b.cells[1].textContent.trim().toLowerCase();
         return filters.studentOrder === "asc"
           ? nameA.localeCompare(nameB)
-          : nameB.localeCompare(a.nameB);
+          : nameB.localeCompare(nameA);
       });
     }
 
-    // Сортировка по дате
+    // ✅ Сортировка по дате
     if (filters.dateOrder !== "default") {
       filteredRows.sort((a, b) => {
         const dateA = new Date(a.cells[5].textContent.trim());
@@ -61,19 +53,16 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
 
-    // Перерисовываем таблицу
     tbody.innerHTML = "";
     filteredRows.forEach((row) => tbody.appendChild(row));
   }
 
-  // === Инициализация селектов ===
   function initSelect(id, filterKey) {
     const customSelect = document.getElementById(id);
     const selectedOption = customSelect.querySelector(".selected-option");
     const optionsList = customSelect.querySelector(".select-options");
     const options = customSelect.querySelectorAll(".option");
 
-    // Закрываем по умолчанию
     optionsList.classList.add("hide");
 
     customSelect.addEventListener("click", function (e) {
@@ -97,54 +86,43 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
 
-    // Закрыть при клике вне
     document.addEventListener("click", () => optionsList.classList.add("hide"));
   }
 
-  // Подключаем фильтры
   initSelect("groupFilter", "group");
   initSelect("studentFilter", "studentOrder");
   initSelect("testFilter", "test");
   initSelect("gradeFilter", "grade");
   initSelect("dateFilter", "dateOrder");
-
-  // === Сброс фильтров ===
+  const defaultTexts = {
+    groupFilter: "Все группы",
+    studentFilter: "По умолчанию",
+    testFilter: "Тема теста",
+    gradeFilter: "Все оценки", // <-- здесь укажи именно тот текст, который в HTML для оценки по умолчанию
+    dateFilter: "Дата прохождения",
+  };
   const resetBtn = document.getElementById("resetFiltersBtn");
   if (resetBtn) {
     resetBtn.addEventListener("click", function () {
-      // Сбрасываем фильтры
       filters.group = "";
       filters.studentOrder = "default";
       filters.test = "";
       filters.grade = "";
       filters.dateOrder = "default";
 
-      // Возвращаем селекты к дефолтному состоянию
       document.querySelectorAll(".custom-select").forEach((select) => {
         const selectedOption = select.querySelector(".selected-option");
-        const options = Array.from(select.querySelectorAll(".option"));
+        const id = select.id; // например, groupFilter, gradeFilter и т.д.
 
-        // Ищем опцию "по умолчанию"
-        const defaultOption = options.find(
-          (opt) =>
-            opt.textContent.toLowerCase().includes("по умолчанию") ||
-            opt.textContent === "Все группы" ||
-            opt.textContent === "Тема теста" ||
-            opt.textContent === "Оценка" ||
-            opt.textContent === "Дата прохождения"
-        );
-
-        if (defaultOption && selectedOption) {
-          selectedOption.textContent = defaultOption.textContent;
+        if (selectedOption && defaultTexts[id]) {
+          selectedOption.textContent = defaultTexts[id];
         }
       });
 
-      // Восстанавливаем все строки
       applyFilters();
     });
   }
 
-  // Сохраняем оригинальные строки при загрузке
   saveOriginalRows();
-  applyFilters(); // Первичная фильтрация
+  applyFilters();
 });
