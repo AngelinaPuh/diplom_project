@@ -32,7 +32,7 @@ if (
 // Создаем переменные
 $surname = $_POST['surname'];
 $name = $_POST['name'];
-$group = $_POST['group'];
+$group = $_POST['group']; 
 $password = $_POST['password'];
 $password_check = $_POST['password_check'];
 

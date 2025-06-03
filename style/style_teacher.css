@@ -11,7 +11,21 @@
   display: flex;
   justify-content: space-between;
 }
-
+/* стили для кнопки админки */
+.open__admin {  
+  padding: 10px 20px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 10px;
+  background-color: #28a745;
+  transition: background-color 0.3s ease;
+}
+.open__admin:hover {
+  background-color: #218838;
+}
 /* Стили для кнопки выхода */
 .logout-btn {
   float: right;
@@ -30,19 +44,13 @@
 }
 
 /* Стили для блока информации о пользователе */
-.user-info-block {
+.user-admin-block {
   background-color: #fff;
   padding: 20px;
   margin-bottom: 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-
-.user-name-group {
-  font-size: 18px;
-  margin-bottom: 10px;
-}
-
 .progress {
   margin-top: 10px;
 }
@@ -88,25 +96,4 @@
 
 .styled-table tbody tr:hover {
   background-color: #f1f1f1;
-}
-/* Стили для progress bar */
-.progress-bar-container {
-  width: 250px;
-  height: 10px;
-  background-color: #ddd; /* Серый фон */
-  border-radius: 5px;
-  overflow: hidden;
-  margin-bottom: 10px;
-}
-
-.progress-bar {
-  height: 100%;
-  background-color: #28a745; /* Зелёный цвет */
-  width: 0%; /* Изначально ширина 0% */
-  transition: width 0.5s ease; /* Анимация изменения ширины */
-}
-
-.progress-text {
-  font-size: 14px;
-  color: #333;
 }

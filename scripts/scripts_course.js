@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const firstLectureId = firstLink.getAttribute("href").substring(1);
       showLecture(firstLectureId); // Показываем первую лекцию
     } else {
-      console.warn("Нет доступных лекций для отображения.");
+      // console.warn("Нет доступных лекций для отображения.");
     }
   } catch (error) {
     console.error("Ошибка при инициализации:", error);
@@ -102,11 +102,6 @@ document.addEventListener("DOMContentLoaded", () => {
 // обработка кнопки "ЗАВЕРШИТЬ лекцию"
 document.addEventListener("DOMContentLoaded", () => {
   // Проверка авторизации (определи эту переменную где-то глобально)
-  // Например: const isUserAuthorized = true; // или false
-  if (typeof isUserAuthorized === "undefined") {
-    console.warn("Переменная isUserAuthorized не определена. Установи её значение.");
-  }
-
   // Функция для показа кнопки "Пройти тест" по ID лекции
   function showTakeTestButton(lectureId) {
     const takeTestButton = document.querySelector(`.course__take-test[data-lecture-id="${lectureId}"]`);
