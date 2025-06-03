@@ -70,3 +70,31 @@ POST data: Array
     [password] => 1234йцук
 )
 
+Script started at 2025-06-03 17:34:56
+POST data: Array
+(
+    [surname] => Пухненкова
+    [password] => 1234йцу
+)
+
+Script started at 2025-06-03 17:35:09
+POST data: Array
+(
+    [surname] => Пухненкова
+    [password] => 1234йцу
+)
+
+Script started at 2025-06-03 17:35:25
+POST data: Array
+(
+    [surname] => Пухненкова
+    [password] => 1234йцук
+)
+
+Script started at 2025-06-03 17:36:06
+POST data: Array
+(
+    [surname] => Савичев
+    [password] => admin_AS
+)
+

@@ -12,7 +12,7 @@
   justify-content: space-between;
 }
 /* стили для кнопки админки */
-.open__admin {  
+.open__admin {
   padding: 10px 20px;
   color: white;
   border: none;
@@ -51,10 +51,6 @@
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-.progress {
-  margin-top: 10px;
-}
-
 /* Стили для блока истории тестов */
 .test-history-block {
   background-color: #fff;
@@ -96,4 +92,78 @@
 
 .styled-table tbody tr:hover {
   background-color: #f1f1f1;
+}
+/* стили для фильтров внутри заголовка таблицы */
+/* === Кастомный селект === */
+.custom-select {
+  position: relative;
+  width: 100%;
+  cursor: pointer;
+}
+
+.selected-option {
+  color: white;
+  font-size: 14px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+}
+
+.select-options {
+  min-width: 100px;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  margin-top: 2px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.hide {
+  display: none !important;
+}
+
+.option {
+  padding: 8px;
+  color: #333;
+  font-size: 14px;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.option:hover {
+  background-color: #218838;
+  color: white;
+}
+
+.selected-option::after {
+  content: "▾";
+  font-size: 12px;
+  color: white;
+  margin-left: 8px;
+}
+/* === Кнопка сброса фильтров === */
+.reset-filters-btn {
+  padding: 8px 16px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.reset-filters-btn:hover {
+  background-color: #218838;
 }

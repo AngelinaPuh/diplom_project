@@ -58,5 +58,6 @@
     <?php include 'pages/authorization.php'; ?> <!-- Включение модального окна -->
     <script src="scripts/scripts_auth.js" defer></script>
     <script src="scripts/scripts_course.js"></script>
+    <script src="scripts/scripts_teacher.js"></script>
 </body>
 </html>

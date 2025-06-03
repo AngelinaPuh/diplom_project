@@ -1,5 +1,6 @@
 <?php
 include_once 'profile_logic.php';
+$pageTitle = "Личный кабинет студента - Образовательный курс"; 
 ?>
 <div class="container">
     <div class="user__div">
