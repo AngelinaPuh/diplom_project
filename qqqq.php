@@ -1,148 +1,249 @@
-<div class="lectures__container">
-    <!-- Заголовок -->
-    <h1 class="lectures__items-h1">Материнские платы</h1>
+-- База данных: `diplom`
+-- Структура таблицы `completed_lecture`
+CREATE TABLE `completed_lecture` (
+  `id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `lecture_id` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+-- Дамп данных таблицы `completed_lecture`
+INSERT INTO `completed_lecture` (`id`, `user_id`, `lecture_id`) VALUES
+(24, 2, 34);
 
-    <!-- Абзацы -->
-    <p class="lectures__items-p">
-        Материнская плата – это основной элемент ПК, который управляет внутренними связями ПК и взаимодействует с внешними устройствами. На ней располагаются разъемы для подключения всех устройств.
-    </p>
+-- Структура таблицы `completed_test`
+--
+CREATE TABLE `completed_test` (
+  `id` int NOT NULL,
+  `id_student` int NOT NULL,
+  `id_test` int NOT NULL,
+  `assessment` int NOT NULL,
+  `try` int NOT NULL DEFAULT '0',
+  `date_completed` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-    <!-- Список основных производителей -->
-    <p class="lectures__items-p">Основные производители:</p>
-    <ul class="lectures__items-ul">
-        <li class="lectures__items-li">Intel</li>
-        <li class="lectures__items-li">Asus</li>
-        <li class="lectures__items-li">ASRock</li>
-        <li class="lectures__items-li">Foxconn</li>
-        <li class="lectures__items-li">MSI</li>
-        <li class="lectures__items-li">Gigabyte</li>
-    </ul>
+-- Дамп данных таблицы `completed_test`
+--
 
-    <!-- Форм-фактор -->
-    <h2 class="lectures__items-h2">Форм-фактор</h2>
-    <p class="lectures__items-p">
-        Форм-фактор: стандарт технического изделия, описывающий некоторую совокупность его технических параметров.
-    </p>
-    <ul class="lectures__items-ul">
-        <li class="lectures__items-li">АТХ – 305х244 mm;</li>
-        <li class="lectures__items-li">Mini ATX – 170x170 mm;</li>
-        <li class="lectures__items-li">Micro ATX – 244x244.</li>
-    </ul>
-    <p class="lectures__items-p">Определяет:</p>
-    <ol class="lectures__items-ol">
-        <li class="lectures__items-li">геометрические размеры материнской платы;</li>
-        <li class="lectures__items-li">положение разъёмов и отверстий на корпусе;</li>
-        <li class="lectures__items-li">положение и характеристики блока питания;</li>
-        <li class="lectures__items-li">сокет;</li>
-        <li class="lectures__items-li">chipset.</li>
-    </ol>
+INSERT INTO `completed_test` (`id`, `id_student`, `id_test`, `assessment`, `try`, `date_completed`) VALUES
+(4, 2, 2, 5, 3, '2025-06-09'),
+(5, 2, 3, 5, 3, '2025-05-30'),
+(11, 3, 4, 2, 2, '2025-06-02');
 
-    <!-- Chipset -->
-    <h2 class="lectures__items-h2">Chipset</h2>
-    <p class="lectures__items-p">
-        Chipset – набор контроллеров интерфейсов, связывающих процессор и другие части ПК.
-    </p>
-    <p class="lectures__items-p">
-        Северный мост – отвечает за работу с процессором, памятью, видеокартой; определяет частоту системной шины, тип оперативной памяти, её макс. объем и частоту, в современных материнских платах его функции выполняет процессор.
-    </p>
-    <p class="lectures__items-p">
-        Южный мост – реализует медленные взаимодействия (с периферией).
-    </p>
+-- Структура таблицы `lecture`
+--
 
-    <!-- Сокет -->
-    <h2 class="lectures__items-h2">Сокет</h2>
-    <p class="lectures__items-p">
-        Сокет - гнездовой или щелевой разъём (гнездо) в материнской плате, предназначенный для установки в него центрального процессора.
-    </p>
-    <p class="lectures__items-p">AMD:</p>
-    <ul class="lectures__items-ul">
-        <li class="lectures__items-li">AM5</li>
-        <li class="lectures__items-li">AM4</li>
-    </ul>
-    <p class="lectures__items-p">Intel:</p>
-    <ul class="lectures__items-ul">
-        <li class="lectures__items-li">LGA 1700</li>
-        <li class="lectures__items-li">LGA 1200</li>
-    </ul>
+CREATE TABLE `lecture` (
+  `id` int NOT NULL,
+  `id_section` int NOT NULL,
+  `title_lecture` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `lecture_text` text NOT NULL,
+  `order_lecture` int NOT NULL,
+  `test_id` int DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-    <!-- DIMM, IDE, SATA, M.2 -->
-    <h2 class="lectures__items-h2">Интерфейсы</h2>
-    <p class="lectures__items-p">
-        DIMM – двусторонний модуль памяти, поколения DDR1, DDR2, DDR3, DDR4, DDR5.
-    </p>
-    <p class="lectures__items-p">
-        IDE – параллельный интерфейс подключения жестких дисков и оптических приводов (устаревший).
-    </p>
-    <p class="lectures__items-p">
-        SATA – последовательный интерфейс обмена данными с накопителями информации. Является развитием IDE. SATA 2.0 – до 2 и 4 Гбит/сек; SATA 3.0 – 6 Гбит/сек.
-    </p>
-    <p class="lectures__items-p">
-        M.2 – разъём для подключения высокоскоростных SSD накопителей (500 – 10 000 Мб/сек).
-    </p>
+--
+-- Дамп данных таблицы `lecture`
+--
 
-    <!-- PCI, PCIe -->
-    <p class="lectures__items-p">
-        PCI – шина ввода/вывода для подключения периферийных устройств к материнской плате (сетевые платы, звуковые платы).
-    </p>
-    <p class="lectures__items-p">
-        PCIExpress – интерфейс для подключения видеоадаптера. (версии PCIe 4.0 и PCIe 5.0).
-    </p>
-    <p class="lectures__items-p">
-        PCIe 1x – высокоскоростной интерфейс подключения плат расширения.
-    </p>
+INSERT INTO `lecture` (`id`, `id_section`, `title_lecture`, `lecture_text`, `order_lecture`, `test_id`) VALUES
+(1, 1, 'Технические средства информатизации (ТСИ)', '<!-- Заголовок -->', 10, 2),
+(9, 2, 'Материнские платы', '<div class=\"\">', 30, 4),
+-- Структура таблицы `questions`
+--
 
-    <!-- Разъемы питания -->
-    <h2 class="lectures__items-h2">Разъемы питания</h2>
-    <p class="lectures__items-p">
-        Разъем питания (ATX Power connector) – 24-контактный разъем для питания материнской платы.
-    </p>
-    <p class="lectures__items-p">
-        Разъем подключения кулера: 4-контактный – для подключения вентилятора ЦП с управлением скоростью; 3-контактный – для подключения вентилятора корпусов.
-    </p>
-    <p class="lectures__items-p">
-        Батарейка – служит для сохранения настроек BIOS в памяти CMOS (срок службы ~5 лет).
-    </p>
+CREATE TABLE `questions` (
+  `id` int NOT NULL,
+  `id_test` int NOT NULL,
+  `title_questions` text NOT NULL,
+  `correct_option` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `wrong_answer1` text NOT NULL,
+  `wrong_answer2` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `wrong_answer3` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-    <!-- Внешние разъёмы -->
-    <h2 class="lectures__items-h2">Внешние разъёмы материнской платы</h2>
-    <p class="lectures__items-p">
-        VGA – стандарт мониторов и видеоадаптеров. Аналоговый разъем для передачи графической информации (монитор, проектор).
-    </p>
-    <p class="lectures__items-p">
-        DVI – цифровой разъем для передачи графической информации (монитор, проектор).
-    </p>
-    <p class="lectures__items-p">
-        HDMI — интерфейс для мультимедиа высокой чёткости, позволяющий передавать цифровые видеоданные высокого разрешения и многоканальное цифровое аудио.
-    </p>
-    <p class="lectures__items-p">
-        RJ 45 (сетевая карта) – служит для подключения к сети передачи данных (интернет и др.).
-    </p>
-    <p class="lectures__items-p">
-        PS/2 – подключение мыши и клавиатуры (зел. – мышь, фиол. – клавиатура) (устаревший).
-    </p>
-    <p class="lectures__items-p">
-        USB – последовательный интерфейс передачи данных для подключения периферийных устройств. Подает питание на устройство, позволяя подключать его без собственного источника питания. USB 2.0 – черный; USB 3.0 – синий, USB 3.1 - красный.
-    </p>
-    <p class="lectures__items-p">
-        S/PDIF — это формат интерфейса передачи аудио, поддерживающий передачу цифровых аудио сигналов от одного устройства к другому без процедуры преобразования в аналоговый сигнал, что позволяет избежать ухудшения качества звука.
-    </p>
+--
+-- Дамп данных таблицы `questions`
+--
 
-    <!-- Характеристики -->
-    <h3 class="lectures__items-h3 left">Характеристики</h3>
-    <ol class="lectures__items-ol">
-        <li class="lectures__items-li">Форм-фактор (ATX/mini-ATX)</li>
-        <li class="lectures__items-li">Сокет (АМ5, LGA 1700)</li>
-        <li class="lectures__items-li">Тип поддерживаемой памяти (DDR4, DDR5)</li>
-        <li class="lectures__items-li">Минимальная и макс частота памяти (~2133 МГц - ~4733 МГц)</li>
-        <li class="lectures__items-li">Максимальный объем памяти (~128 Гб)</li>
-        <li class="lectures__items-li">Количество слотов памяти (2 / 4 / 6)</li>
-        <li class="lectures__items-li">Чипсет (AMD B650, Intel Z490)</li>
-        <li class="lectures__items-li">Тип и количество портов SATA (~6)</li>
-        <li class="lectures__items-li">Встроенные видеоразъёмы (DisplayPort, HDMI)</li>
-        <li class="lectures__items-li">Количество разъёмов М.2 (1 / 2)</li>
-        <li class="lectures__items-li">Количество слотов PCI-E x1 (~3)</li>
-        <li class="lectures__items-li">Количество внутренних и внешних USB</li>
-        <li class="lectures__items-li">Скорость сетевого адаптера (~1 Гбит/с)</li>
-        <li class="lectures__items-li">Наличие BT/Wi-fi</li>
-    </ol>
-</div>
+INSERT INTO `questions` (`id`, `id_test`, `title_questions`, `correct_option`, `wrong_answer1`, `wrong_answer2`, `wrong_answer3`) VALUES
+(1, 2, 'Что такое ТСИ?', 'Совокупность', 'Технические', 'Программное', 'Средства');
+-- Структура таблицы `section`
+CREATE TABLE `section` (
+  `id` int NOT NULL,
+  `title_section` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `order_section` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Дамп данных таблицы `section`
+--
+
+INSERT INTO `section` (`id`, `title_section`, `order_section`) VALUES
+(1, 'Технические средства информатизации (ТСИ) ', 10);
+-- Структура таблицы `test`
+CREATE TABLE `test` (
+  `id` int NOT NULL,
+  `title_test` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Дамп данных таблицы `test`
+INSERT INTO `test` (`id`, `title_test`) VALUES
+(1, ''),
+(4, 'Микропроцессоры');
+-- Структура таблицы `users`
+--
+
+CREATE TABLE `users` (
+  `id` int NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `surname` varchar(50) NOT NULL,
+  `group_st` varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `password` varchar(8) NOT NULL,
+  `progress` int DEFAULT '0',
+  `role` varchar(5) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Дамп данных таблицы `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `surname`, `group_st`, `password`, `progress`, `role`) VALUES
+(12, 'Александр', 'Савичев', '-', 'admin_AS', 0, 'admin');
+
+--
+-- Индексы сохранённых таблиц
+--
+
+--
+-- Индексы таблицы `completed_lecture`
+--
+ALTER TABLE `completed_lecture`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `lecture_id` (`lecture_id`);
+
+--
+-- Индексы таблицы `completed_test`
+--
+ALTER TABLE `completed_test`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `completed_test_fk1` (`id_student`),
+  ADD KEY `completed_test_fk2` (`id_test`);
+
+--
+-- Индексы таблицы `lecture`
+--
+ALTER TABLE `lecture`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `lecture_fk1` (`id_section`),
+  ADD KEY `lecture_fk2` (`test_id`);
+
+--
+-- Индексы таблицы `questions`
+--
+ALTER TABLE `questions`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `questions_fk1` (`id_test`);
+
+--
+-- Индексы таблицы `section`
+--
+ALTER TABLE `section`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id` (`id`);
+
+--
+-- Индексы таблицы `test`
+--
+ALTER TABLE `test`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id` (`id`);
+
+--
+-- Индексы таблицы `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id` (`id`);
+
+--
+-- AUTO_INCREMENT для сохранённых таблиц
+--
+
+--
+-- AUTO_INCREMENT для таблицы `completed_lecture`
+--
+ALTER TABLE `completed_lecture`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+
+--
+-- AUTO_INCREMENT для таблицы `completed_test`
+--
+ALTER TABLE `completed_test`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT для таблицы `lecture`
+--
+ALTER TABLE `lecture`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+
+--
+-- AUTO_INCREMENT для таблицы `questions`
+--
+ALTER TABLE `questions`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT для таблицы `section`
+--
+ALTER TABLE `section`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT для таблицы `test`
+--
+ALTER TABLE `test`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT для таблицы `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- Ограничения внешнего ключа сохраненных таблиц
+--
+
+--
+-- Ограничения внешнего ключа таблицы `completed_lecture`
+--
+ALTER TABLE `completed_lecture`
+  ADD CONSTRAINT `completed_lecture_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `completed_lecture_ibfk_2` FOREIGN KEY (`lecture_id`) REFERENCES `lecture` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
+-- Ограничения внешнего ключа таблицы `completed_test`
+--
+ALTER TABLE `completed_test`
+  ADD CONSTRAINT `completed_test_fk1` FOREIGN KEY (`id_student`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `completed_test_fk2` FOREIGN KEY (`id_test`) REFERENCES `test` (`id`);
+
+--
+-- Ограничения внешнего ключа таблицы `lecture`
+--
+ALTER TABLE `lecture`
+  ADD CONSTRAINT `lecture_fk1` FOREIGN KEY (`id_section`) RE
+  FERENCES `section` (`id`),
+  ADD CONSTRAINT `lecture_fk2` FOREIGN KEY (`test_id`) REFERENCES `test` (`id`);
+
+--
+-- Ограничения внешнего ключа таблицы `questions`
+--
+ALTER TABLE `questions`
+  ADD CONSTRAINT `questions_fk1` FOREIGN KEY (`id_test`) REFERENCES `test` (`id`);
+COMMIT;
+

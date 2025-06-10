@@ -6,7 +6,7 @@ $pageTitle = "Личный кабинет пе - Образовательный 
 <div class="container">
 	<div class="user__div">
 		<h2>Добро пожаловать, преподаватель <?= htmlspecialchars($user['surname']) ?> <?= htmlspecialchars($user['name']) ?></h2>
-		<button type="button" class="open__admin">Открыть панель управления лекциями</button>
+		<button type="button" class="open__admin" onclick="window.open('pages/admin_panel.php', '_blank')">Открыть админ-панель</button>
 		<form action="actions/exit.php" method="post">
 			<button type="submit" class="logout-btn">Выйти</button>
 		</form>

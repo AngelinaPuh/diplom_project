@@ -55,7 +55,7 @@ require_once 'course_logic/logic.php';
                 </article>
                 <div class="course__footer">
                     <button class="course__complete-lecture" data-lecture-id="<?php echo $lecture['id']; ?>">Завершить лекцию</button>
-                    <button class="course__take-test" data-lecture-id="<?php echo $lecture['id']; ?>" style="display: none;">Пройти тест</button>
+                    <!-- Кнопка "Пройти тест" или сообщение будут добавлены динамически -->
                     <button class="course__next-lecture" data-lecture-id="<?php echo $lecture['id']; ?>">Следующая лекция</button>
                 </div>
                 <!-- блок теста -->

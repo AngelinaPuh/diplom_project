@@ -1,0 +1,245 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-color: #f2f2f2;
+}
+button {
+  margin: 5px;
+}
+/* Заголовок по центру */
+.panel-title {
+  text-align: center;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+/* Стили для "таблицы" */
+.table-container {
+  display: table;
+  width: 100%;
+  border-spacing: 0;
+  table-layout: fixed;
+}
+
+.table-row {
+  display: flex;
+  justify-content: space-around;
+}
+
+.table-cell {
+  display: flex;
+  vertical-align: top;
+  padding: 20px;
+  background-color: #fff;
+  position: relative;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  width: 30%;
+  align-items: center;
+}
+.table-buttons {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  justify-content: space-between;
+  width: -webkit-fill-available;
+}
+.table-buttons > button {
+  width: 100%;
+}
+/* Вертикальная полоска справа (кроме последней ячейки) */
+.table-cell:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: -1px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: #ccc;
+}
+
+/* Горизонтальная граница сверху и снизу */
+.table-cell:first-child {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.table-cell:last-child {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+/* Заголовки внутри ячеек */
+.table-cell h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #444;
+}
+
+/* Кнопки действий */
+.action-btn {
+  padding: 10px 15px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: white;
+  font-size: 14px;
+}
+
+.add__section,
+.add__lecture,
+.add__test {
+  background-color: #28a745;
+}
+.add__section:hover {
+  background-color: #218838;
+}
+.add__lecture:hover {
+  background-color: #218838;
+}
+.add__test:hover {
+  background-color: #218838;
+}
+
+.edit__section,
+.edit__lecture,
+.edit__test {
+  background-color: #007bff;
+}
+.edit__section:hover {
+  background-color: #0069d9;
+}
+.edit__lecture:hover {
+  background-color: #0069d9;
+}
+.edit__test:hover {
+  background-color: #0069d9;
+}
+
+.delete__test,
+.delete__lecture,
+.delete__section,
+.del,
+#clearCacheButton {
+  background-color: #dc3545;
+}
+.delete__test:hover {
+  background-color: #b31f2d;
+}
+.delete__lecture:hover {
+  background-color: #b31f2d;
+}
+.delete__section:hover {
+  background-color: #b31f2d;
+}
+#clearCacheButton:hover {
+  background-color: #b31f2d;
+}
+.del:hover {
+  background-color: #b31f2d;
+}
+/* Стиль для кнопки "Назад" */
+.back-button-container {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.back-btn {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.back-btn:hover {
+  background-color: #5a6268;
+}
+.form-container {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  /* display: none; Initially hidden */
+}
+
+.form-container label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-container input[type="text"],
+.form-container input[type="number"],
+.form-container select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.form-container button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.form-container button:hover {
+  background-color: #3e8e41;
+}
+
+/* Стили для выпадающего списка */
+.select-container {
+  margin-bottom: 10px;
+}
+
+.select-container select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.select-container button {
+  background-color: #007bff; /* Blue color */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.select-container button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+.form-container .del {
+  background-color: #dc3545;
+}
+.form-container .del:hover {
+  background-color: #b31f2d;
+}
+.form-container .edit {
+  background-color: #007bff;
+}
+.form-container .edit:hover {
+  background-color: #0069d9;
+}
+#addAnotherQuestionButton{
+  color: black;
+  background-color: #fff000;
+}
+#addAnotherQuestionButton:hover {
+  background-color: #d4c602;
+}
