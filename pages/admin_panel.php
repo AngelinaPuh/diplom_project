@@ -78,29 +78,27 @@
   </div>
   <!-- ========== РАЗДЕЛ ========== -->
   <!-- Форма добавления раздела -->
-  <div id="addSectionForm" class="form-container">
+  <form id="addSectionForm" class="form-container">
     <h2>Добавить раздел</h2>
     <label for="sectionName">Название раздела:</label>
     <input type="text" id="sectionName" name="sectionName">
-
     <label for="sectionOrder">Порядковый номер раздела:</label>
     <input type="number" id="sectionOrder" name="sectionOrder">
-
-    <button>Сохранить</button>
-  </div>
+    <button type="submit">Сохранить</button>
+  </form>
 
   <!-- Форма выбора раздела для редактирования -->
-  <div id="editSectionSelectForm" class="form-container">
+  <form id="editSectionSelectForm" class="form-container">
     <h2>Редактировать раздел</h2>
     <label for="sectionSelect">Выберите раздел для редактирования:</label>
     <select id="sectionSelect" name="sectionSelect">
       <!-- Здесь будут опции разделов (пока пусто) -->
     </select>
-    <button id="editSectionButton" class="edit">Редактировать</button>
-  </div>
+    <button id="editSectionButton" class="edit" type="submit">Редактировать</button>
+  </form>
 
   <!-- Форма редактирования раздела -->
-  <div id="editSectionForm" class="form-container">
+  <form id="editSectionForm" class="form-container">
     <h2>Редактировать раздел</h2>
     <label for="editSectionName">Название раздела:</label>
     <input type="text" id="editSectionName" name="editSectionName">
@@ -108,22 +106,24 @@
     <label for="editSectionOrder">Порядковый номер раздела:</label>
     <input type="number" id="editSectionOrder" name="editSectionOrder">
 
-    <button>Сохранить изменения</button>
-  </div>
+    <input type="hidden" id="editSectionId" name="editSectionId"> <!-- Скрытое поле для ID редактируемого раздела -->
+
+    <button type="submit">Сохранить изменения</button>
+  </form>
 
   <!-- Форма выбора раздела для удаления -->
-  <div id="deleteSectionSelectForm" class="form-container">
+  <form id="deleteSectionSelectForm" class="form-container">
     <h2>Удалить раздел</h2>
     <label for="deleteSectionSelect">Выберите раздел для удаления:</label>
     <select id="deleteSectionSelect" name="deleteSectionSelect">
       <!-- Здесь будут опции разделов (пока пусто) -->
     </select>
-    <button id="deleteSectionButton" class="del">Удалить</button>
-  </div>
+    <button id="deleteSectionButton" class="del" type="submit">Удалить</button>
+  </form>
 
   <!-- ========== ЛЕКЦИИ ========== -->
   <!-- Форма добавления лекции -->
-  <div id="addLectureForm" class="form-container">
+  <form id="addLectureForm" class="form-container" action="/api/lectures/add" method="POST">
     <h2>Добавить лекцию</h2>
 
     <label for="lectureSection">Раздел:</label>
@@ -145,11 +145,11 @@
       <!-- Здесь будут опции тестов (заполнять динамически) -->
     </select>
 
-    <button>Сохранить</button>
-  </div>
+    <button type="submit">Сохранить</button>
+  </form>
 
   <!-- Форма выбора лекции для редактирования -->
-  <div id="editLectureSelectForm" class="form-container">
+  <form id="editLectureSelectForm" class="form-container" action="/api/lectures/getLecture" method="GET">
     <h2>Редактировать лекцию</h2>
 
     <label for="lectureSelect">Выберите лекцию для редактирования:</label>
@@ -157,11 +157,11 @@
       <!-- Здесь будут опции лекций (заполнять динамически) -->
     </select>
 
-    <button id="editLectureButton"  class="edit">Редактировать</button>
-  </div>
+    <button id="editLectureButton" class="edit" type="submit">Редактировать</button>
+  </form>
 
   <!-- Форма редактирования лекции -->
-  <div id="editLectureForm" class="form-container">
+  <form id="editLectureForm" class="form-container" action="/api/lectures/update" method="PUT">
     <h2>Редактировать лекцию</h2>
 
     <label for="editLectureSection">Раздел:</label>
@@ -183,31 +183,31 @@
       <!-- Здесь будут опции тестов (заполнять динамически) -->
     </select>
 
-    <button>Сохранить изменения</button>
-  </div>
+    <input type="hidden" id="editLectureId" name="editLectureId"> <!-- Скрытое поле для ID редактируемой лекции -->
+
+    <button type="submit">Сохранить изменения</button>
+  </form>
 
   <!-- Форма выбора лекции для удаления  -->
-  <div id="deleteLectureSelectForm" class="form-container">
+  <form id="deleteLectureSelectForm" class="form-container" action="/api/lectures/delete" method="DELETE">
     <h2>Удалить лекцию</h2>
     <label for="deleteLectureSelect">Выберите лекцию для удаления:</label>
     <select id="deleteLectureSelect" name="deleteLectureSelect">
       <!-- Здесь будут опции лекций (заполнять динамически) -->
     </select>
-    <button id="deleteLectureButton" class="del">Удалить</button>
-  </div>
-
+    <button id="deleteLectureButton" class="del" type="submit">Удалить</button>
+  </form>
 
   <!-- ========== ТЕСТЫ ========== -->
   <!-- Форма добавления теста -->
-  <div id="addTestForm" class="form-container">
+  <form id="addTestForm" class="form-container" action="/api/tests/add" method="POST">
     <h2>Добавить тест</h2>
     <label for="testName">Название теста:</label>
     <input type="text" id="testName" name="testName">
-    <button id="saveTestButton">Сохранить тест</button>
-  </div>
+    <button id="saveTestButton" type="submit">Сохранить тест</button>
+  </form>
 
-  <!-- Форма добавления вопросов (скрыта изначально)style="display: none;" -->
-  <div id="addQuestionForm" class="form-container">
+  <form id="addQuestionForm" class="form-container" action="/api/questions/add" method="POST">
     <h2>Добавить вопросы</h2>
     <div id="questionsContainer">
       <!-- Здесь будут динамически добавляться формы вопросов -->
@@ -228,25 +228,25 @@
         <label for="incorrectAnswer1_3">Неправильный вариант 3:</label>
         <input type="text" id="incorrectAnswer1_3" name="incorrectAnswer3[]">
 
-        <button class="save-question-button">Сохранить вопрос</button>
-        <button class="delete-question-button del">Удалить вопрос</button>
+        <button class="save-question-button" type="submit">Сохранить вопрос</button>
+        <button class="delete-question-button del" type="submit">Удалить вопрос</button>
       </div>
     </div>
-    <button id="addAnotherQuestionButton" class="add__q">Добавить еще один вопрос</button>
-  </div>
+    <button id="addAnotherQuestionButton" class="add__q" type="button">Добавить еще один вопрос</button>
+  </form>
 
   <!-- Форма редактирования теста -->
-  <div id="editTestSelectForm" class="form-container">
+  <form id="editTestSelectForm" class="form-container" action="/api/tests/getTest" method="GET">
     <h2>Редактировать тест</h2>
     <label for="testSelect">Выберите тест для редактирования:</label>
     <select id="testSelect" name="testSelect">
       <!-- Здесь будут опции тестов (заполнять динамически) -->
     </select>
-    <button id="editTestButton"  class="edit">Редактировать</button>
-  </div>
+    <button id="editTestButton" class="edit" type="submit">Редактировать</button>
+  </form>
 
   <!-- Форма редактирования названия теста и вопросов (скрыта изначально) style="display: none;-->
-  <div id="editTestForm" class="form-container">
+  <form id="editTestForm" class="form-container" action="/api/tests/update" method="PUT">
     <h2>Редактировать тест</h2>
     <label for="editTestName">Название теста:</label>
     <input type="text" id="editTestName" name="editTestName">
@@ -270,24 +270,27 @@
         <label for="editIncorrectAnswer1_3">Неправильный вариант 3:</label>
         <input type="text" id="editIncorrectAnswer1_3" name="editIncorrectAnswer3[]">
 
-        <button class="save-question-button">Сохранить вопрос</button>
-        <button class="delete-question-button del">Удалить вопрос</button>
+        <button class="save-question-button" type="submit">Сохранить вопрос</button>
+        <button class="delete-question-button del" type="submit">Удалить вопрос</button>
       </div>
     </div>
-    <button id="saveChangesButton">Сохранить изменения</button>
-  </div>
+    <button id="saveChangesButton" type="submit">Сохранить изменения</button>
+  </form>
 
   <!-- Форма удаления теста -->
-  <div id="deleteTestSelectForm" class="form-container">
+  <form id="deleteTestSelectForm" class="form-container" action="/api/tests/delete" method="DELETE">
     <h2>Удалить тест</h2>
     <label for="deleteTestSelect">Выберите тест для удаления:</label>
     <select id="deleteTestSelect" name="deleteTestSelect">
       <!-- Здесь будут опции тестов (заполнять динамически) -->
     </select>
-    <button id="deleteTestButton" class="del">Удалить</button>
-  </div>
-
+    <button id="deleteTestButton" class="del" type="submit">Удалить</button>
+  </form>
+  <script>
+    // document.body.appendChild(dialog);
+  </script>
   <script src="../scripts/scripts_admin.js"></script>
+  <script src="../scripts/scripts_admin_section.js"></script>
 </body>
 
 </html>

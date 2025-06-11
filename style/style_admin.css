@@ -167,7 +167,6 @@ button {
   border: 1px solid #ccc;
   border-radius: 5px;
   background-color: #f9f9f9;
-  /* display: none; Initially hidden */
 }
 
 .form-container label {
@@ -242,4 +241,98 @@ button {
 }
 #addAnotherQuestionButton:hover {
   background-color: #d4c602;
+}
+.modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* Более темный полупрозрачный фон для лучшей видимости */
+  justify-content: center; /* Центрируем по горизонтали */
+  align-items: center; /* Центрируем по вертикали */
+  z-index: 1000; /* Убедитесь, что он выше других элементов */
+  overflow: auto; /* Добавляем прокрутку, если контент не помещается */
+}
+
+.modal-container.show {
+    display: flex; /* Показываем модальное окно */
+}
+
+.modal {
+  background-color: #fff; /* Белый фон */
+  padding: 30px; /* Увеличиваем отступы для комфорта */
+  border-radius: 10px; /* Более мягкие углы */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Более мягкая тень */
+  width: 80%; /* Занимает 80% ширины контейнера */
+  max-width: 700px; /* Максимальная ширина 700px */
+  position: relative; /* Для позиционирования кнопки закрытия относительно модального окна */
+  animation: modalFadeIn 0.3s ease-out; /* Плавное появление */
+  margin: auto;
+  margin-top: auto;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-content {
+  /* Стили для содержимого модального окна */
+}
+
+.close-button {
+  position: absolute;
+  top: 10px; /* Сдвигаем кнопку закрытия вверх */
+  right: 10px; /* Сдвигаем кнопку закрытия вправо */
+  cursor: pointer;
+  font-size: 24px; /* Увеличиваем размер шрифта */
+  color: #888; /* Серый цвет */
+  transition: color 0.2s ease-in-out; /* Плавное изменение цвета при наведении */
+}
+
+.close-button:hover {
+  color: #333; /* Темно-серый цвет при наведении */
+}
+
+/* Стили для списков (пример) */
+.modal-content ul {
+  list-style: disc; /* Маркированный список */
+  padding-left: 20px;
+  margin-top: 10px;
+}
+
+.modal-content li {
+  margin-bottom: 5px;
+}
+
+/* Дополнительные стили для заголовков (пример) */
+.modal-content h2 {
+  font-size: 24px;
+  margin-bottom: 15px;
+  color: #333;
+  border-bottom: 1px solid #eee; /* Подчеркивание заголовка */
+  padding-bottom: 5px;
+}
+
+/* Стили для кнопок внутри модального окна (пример) */
+.modal-content button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.modal-content button:hover {
+  background-color: #0056b3;
 }
